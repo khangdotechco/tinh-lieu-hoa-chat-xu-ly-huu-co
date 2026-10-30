@@ -67,7 +67,7 @@ summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--ink);margin:0;cursor:pointer}
 .seg input{width:auto}
-#logbox{max-height:260px;overflow:auto}
+#logbox{max-height:300px;overflow:auto}
 textarea{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:8px}
 .plans{display:grid;gap:12px;grid-template-columns:1fr}
 @media(min-width:1650px){.plans{grid-template-columns:repeat(3,1fr)}}
@@ -82,12 +82,52 @@ textarea{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:12px;b
 .km{color:var(--purple)!important}.oz{color:var(--pri)!important}
 tr.tot td,tr.tot th{font-weight:700;border-top:2px solid var(--line)}
 td.z{color:var(--mute)}
+main>section{min-width:0}
+.card{min-width:0}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.card>details>summary,.card h2.fold{cursor:pointer}
+details.sec>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:700;padding:0}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::after{content:'▾';color:var(--mute);font-size:14px;transition:transform .15s}
+details.sec:not([open])>summary::after{transform:rotate(-90deg)}
+details.sec[open]>summary{margin-bottom:10px}
+details.sec .sumv{font-size:12px;font-weight:500;color:var(--mute);margin-left:auto;margin-right:8px}
+.jump{display:none}
+@media(max-width:640px){
+  body{font-size:14px}
+  header{padding:12px 12px 2px}
+  h1{font-size:17px}
+  main{padding:6px 8px 30px;gap:10px}
+  .card{padding:12px;border-radius:10px}
+  .grid2{gap:8px}
+  label{font-size:12px}
+  input,select{padding:8px 9px}
+  .plan{padding:10px}
+  .headline{gap:10px}
+  .headline b{font-size:20px}
+  table{font-size:13px}
+  th,td{padding:5px 4px}
+  .seg label{font-size:12.5px;padding:6px 8px}
+  .jump{display:block;width:100%;margin-top:10px}
+  .hide-m{display:none}
+}
+h2.fold{justify-content:flex-start}
+h2.fold .sumv{font-size:12px;font-weight:500;color:var(--mute);margin-left:auto}
+h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-left:6px}
+.card.closed>*:not(h2){display:none!important}
+.card.closed>h2{margin:0}
+#xList table{min-width:760px} #xList td,#xList th{white-space:nowrap} #xList td:nth-child(10){white-space:normal;min-width:190px}
+#logbox table{min-width:600px} #logbox td,#logbox th{white-space:nowrap}
+.card>details:first-child{border-top:0;margin-top:0;padding-top:0}
+.tblwrap::after{content:'';display:block}
+@media(max-width:640px){#xList::before,#logbox::before{content:'← vuốt ngang để xem hết bảng →';display:block;font-size:11px;color:var(--mute);margin-bottom:4px}}
+.card.closed h2.fold .chev{transform:rotate(-90deg)}
 </style>
 </head>
 <body>
 <header>
   <h1>Tính liều lượng hóa chất xử lý hữu cơ</h1>
-  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v0.7</div>
+  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v0.8</div>
 </header>
 
 <main>
@@ -102,10 +142,11 @@ td.z{color:var(--mute)}
       <div class="field"><label>PI mục tiêu ra mạng <span class="unit">mg/L O₂</span></label><input id="PIt" type="number" step="0.1" value="1.8" inputmode="decimal"></div>
     </div>
     <div class="hint">QCĐP: PI ≤ 2.0 · Fe ≤ 0.3 · Mn ≤ 0.1 mg/L. Nên đặt PI mục tiêu 1.5–1.8 để có biên an toàn.</div>
+    <button class="btn jump" id="jump">Xem kết quả liều châm ↓</button>
   </div>
 
   <div class="card" style="margin-top:12px">
-    <h2>Keo tụ đang dùng (PAC / PA)</h2>
+    <h2 class="fold" data-k="pac"><span>Keo tụ đang dùng (PAC / PA)</span><span class="sumv" id="sv_pac"></span><span class="chev">▾</span></h2>
     <div class="grid2">
       <div class="field"><label>Liều PAC đang châm <span class="unit">g/m³</span></label><input id="PAC" type="number" step="1" value="30" inputmode="decimal"></div>
       <div class="field"><label>Liều PA (polymer) đang châm <span class="unit">g/m³</span></label><input id="PA" type="number" step="0.05" value="0.3" inputmode="decimal"><div class="hint">Chỉ ghi nhận — polymer giúp lắng bông, hầu như không khử PI.</div></div>
@@ -115,7 +156,7 @@ td.z{color:var(--mute)}
   </div>
 
   <div class="card" style="margin-top:12px">
-    <h2>Bồn pha &amp; bơm định lượng KMnO₄</h2>
+    <h2 class="fold" data-k="bon"><span>Bồn pha &amp; bơm định lượng KMnO₄</span><span class="sumv" id="sv_bon"></span><span class="chev">▾</span></h2>
     <div class="grid2">
       <div class="field"><label>Dung tích bồn pha <span class="unit">m³</span></label><input id="V" type="number" step="0.1" value="1" inputmode="decimal"></div>
       <div class="field"><label>Thời gian tối thiểu 1 bồn <span class="unit">giờ</span></label><input id="Hmin" type="number" step="1" value="8" inputmode="decimal"><div class="hint">vd 8 h = 1 ca pha 1 lần</div></div>
@@ -124,11 +165,11 @@ td.z{color:var(--mute)}
       <div class="field"><label>Áp lực ống tại điểm châm <span class="unit">bar</span></label><input id="Pl" type="number" step="0.1" value="2" inputmode="decimal"><div class="hint">Đọc đồng hồ áp tại điểm châm (đầu bơm nước thô).</div></div>
       <div class="field"><label>Nồng độ pha</label><select id="Csel"><option value="auto">Tự động chọn</option><option>0.5</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>3.5</option><option>4</option></select></div>
     </div>
-    <div class="hint">App chọn nồng độ thấp nhất (bước 0.5%, tối đa 4%) sao cho bơm chạy ≤ 80% Q max và 1 bồn dùng được ≥ thời gian tối thiểu.</div>
+    <div class="hint hide-m">App chọn nồng độ thấp nhất (bước 0.5%, tối đa 4%) sao cho bơm chạy ≤ 80% Q max và 1 bồn dùng được ≥ thời gian tối thiểu.</div>
   </div>
 
   <div class="card" style="margin-top:12px">
-    <h2>Thiết bị ozone</h2>
+    <h2 class="fold" data-k="oz"><span>Thiết bị ozone</span><span class="sumv" id="sv_oz"></span><span class="chev">▾</span></h2>
     <div class="grid2">
       <div class="field"><label><b>Công suất tối đa máy ozone</b> <span class="unit">g/h (bắt buộc)</span></label><input id="Omax" type="number" step="10" value="500" inputmode="decimal"></div>
       <div class="field"><label>Mức chạy ổn định tối thiểu <span class="unit">% công suất</span></label><input id="Omin" type="number" step="1" value="20" inputmode="decimal"></div>
@@ -175,7 +216,7 @@ td.z{color:var(--mute)}
   </div>
 
   <div class="card" style="margin-top:12px">
-    <h2>Kiểm tra liều đang vận hành <span class="badge">dư hay thiếu?</span></h2>
+    <h2 class="fold" data-k="run"><span>Kiểm tra liều đang vận hành</span><span class="sumv" id="sv_run"></span><span class="chev">▾</span></h2>
     <div class="hint" style="margin-bottom:8px">Dùng khi nhà máy <b>đang chạy</b> một liều KMnO₄ và ozone nào đó (do ca trực cài đặt). Nhập 2 liều đó vào đây, app so tổng chất oxy hóa đang cấp với nhu cầu của nước thô hiện tại để biết đang dư hay thiếu. Ví dụ đợt 26/10 (2.6 g/m³ + 360 g/h) cho kết quả dư khoảng 4 lần → giải thích ánh vàng và Mn sau lắng tăng.</div>
     <div class="grid2">
       <div class="field"><label>KMnO₄ đang châm <span class="unit">g/m³</span></label><input id="rK" type="number" step="0.1" value="2.6"></div>
@@ -185,7 +226,7 @@ td.z{color:var(--mute)}
   </div>
 
   <div class="card" style="margin-top:12px" id="calcard">
-    <h2>📋 Hiệu chỉnh từ kết quả xét nghiệm</h2>
+    <h2 class="fold" data-k="cal"><span>📋 Hiệu chỉnh từ kết quả xét nghiệm</span><span class="sumv" id="sv_cal"></span><span class="chev">▾</span></h2>
     <div class="hint" style="margin-bottom:8px">Mỗi lần có kết quả xét nghiệm, nhập <b>liều đã chạy lúc lấy mẫu</b> và <b>kết quả nước thô / sau lọc</b>. App tính lại: hiệu suất keo tụ R₀ (từ lần <b>không chạy ozone</b>), hiệu suất ozone ηO (từ lần <b>có ozone</b>), hữu cơ tiêu hao k (từ lần Mn sau lọc chưa đạt). Càng nhiều lần, kết quả càng tin cậy.</div>
     <div class="grid2">
       <div class="field"><label>Ngày / ghi chú</label><input id="xD" type="text" placeholder="vd 05/11 ca 1"></div>
@@ -202,7 +243,7 @@ td.z{color:var(--mute)}
       <div class="field"><label>Sau lọc: PI <span class="unit">mg/L O₂</span></label><input id="xPIo" type="number" step="0.01"></div>
     </div>
     <div class="row"><button class="btn" id="xAdd">Thêm kết quả</button><span id="xMsg" class="hint"></span></div>
-    <div id="xList" style="margin-top:10px;overflow:auto"></div>
+    <div id="xList" class="tblwrap" style="margin-top:10px"></div>
     <div id="xSum"></div>
     <div class="row">
       <button class="btn" id="xApply">Áp dụng hệ số đề xuất</button>
@@ -214,8 +255,8 @@ td.z{color:var(--mute)}
   </div>
 
   <div class="card" style="margin-top:12px">
-    <h2>Nhật ký thử nghiệm</h2>
-    <div id="logbox"></div>
+    <h2 class="fold" data-k="log"><span>Nhật ký thử nghiệm</span><span class="sumv" id="sv_log"></span><span class="chev">▾</span></h2>
+    <div id="logbox" class="tblwrap"></div>
     <div class="row">
       <button class="btn ghost" id="copy">Sao chép nhật ký (dán vào Excel)</button>
       <button class="btn ghost" id="clear">Xóa nhật ký</button>
@@ -541,7 +582,30 @@ $('xCopy').onclick=()=>{const t=JSON.stringify(labs); const ta=$('xTxt'); ta.sty
 $('xPasteBtn').onclick=()=>{$('xTxt').style.display='block';$('xImpRow').style.display='flex';$('xTxt').value='';$('xTxt').focus();};
 $('xImp').onclick=()=>{try{const a=JSON.parse($('xTxt').value); if(Array.isArray(a)){labs=a;store.set('tx_labs',labs);renderLabs();$('xMsg').textContent='Đã nhập '+a.length+' kết quả.';$('xImpRow').style.display='none';}}catch(e){$('xMsg').textContent='Dữ liệu không đúng định dạng.';}};
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
-render(); renderLog(); renderLabs();
+// ===== Thu gọn / mở các mục =====
+const isM=()=>window.matchMedia('(max-width:640px)').matches;
+const foldState=store.get('tx_fold')||{};
+document.querySelectorAll('h2.fold').forEach(h=>{
+  const c=h.parentElement, k=h.dataset.k;
+  const closed = (k in foldState) ? foldState[k] : isM();
+  c.classList.toggle('closed',closed);
+  h.addEventListener('click',()=>{const now=!c.classList.contains('closed'); c.classList.toggle('closed',now); foldState[k]=now; store.set('tx_fold',foldState);});
+});
+function sums(){
+  const t=(id,v)=>{const e=$(id); if(e) e.textContent=v;};
+  t('sv_pac','PAC '+$('PAC').value+' · PA '+$('PA').value);
+  t('sv_bon',$('V').value+' m³ · bơm '+$('Qp').value+' L/h');
+  t('sv_oz',$('Omax').value+' g/h · PA '+pos());
+  t('sv_run',$('rK').value+' g/m³ + '+$('rO').value+' g/h');
+  t('sv_cal',(labs.length)+' kết quả');
+  t('sv_log',(log.length)+' lần');
+}
+IN.forEach(id=>$(id).addEventListener('input',sums));
+document.querySelectorAll('input[name=pos]').forEach(e=>e.addEventListener('change',sums));
+['save','xAdd','clear','xImp'].forEach(id=>$(id)&&$(id).addEventListener('click',()=>setTimeout(sums,50)));
+$('xList').addEventListener('click',()=>setTimeout(sums,50));
+$('jump').onclick=()=>$('advice').scrollIntoView({behavior:'smooth',block:'start'});
+render(); renderLog(); renderLabs(); sums();
 })();
 </script>
 <script>
