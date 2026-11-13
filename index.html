@@ -127,7 +127,7 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
 <body>
 <header>
   <h1>Tính liều lượng hóa chất xử lý hữu cơ</h1>
-  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v1.0</div>
+  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v1.1</div>
 </header>
 
 <main>
@@ -203,9 +203,9 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
     <details id="calib">
       <summary>⚙️ Hệ số hiệu chỉnh (mặc định suy từ đợt 22/10 &amp; 26/10)</summary>
       <div class="grid2" style="margin-top:8px">
-        <div class="field"><label>Tỷ lệ Fe²⁺ / Fe tổng <span class="unit">%</span></label><input id="fFe" type="number" step="5" value="30"><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
+        <div class="field"><label>Tỷ lệ Fe²⁺ / Fe tổng <span class="unit">%</span></label><input id="fFe" type="number" step="5" value="10"><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
         <div class="field"><label>Tỷ lệ Mn²⁺ / Mn tổng <span class="unit">%</span></label><input id="fMn" type="number" step="5" value="90"><div class="hint">Mn trong nước mặt phần lớn ở dạng hòa tan. Dùng khi không nhập Mn sau lọc giấy.</div></div>
-        <div class="field"><label>Hữu cơ tiêu hao KMnO₄ k <span class="unit">g/m³ cho mỗi mg/L PI</span></label><input id="k" type="number" step="0.01" value="0.10"></div>
+        <div class="field"><label>Hữu cơ tiêu hao KMnO₄ k <span class="unit">g/m³ cho mỗi mg/L PI</span></label><input id="k" type="number" step="0.01" value="0.15"></div>
         <div class="field"><label>KMnO₄ dư an toàn <span class="unit">g/m³</span></label><input id="res" type="number" step="0.05" value="0.20"></div>
         <div class="field"><label>Hiệu suất khử PI của keo tụ – lọc R₀ <span class="unit">% (ở liều PAC tham chiếu)</span></label><input id="R0" type="number" step="1" value="57"><div class="hint">Đợt 22/10 đạt 59%.</div></div>
         <div class="field"><label>Số mũ PAC n <span class="unit">R = R₀ × (PAC/PAC tham chiếu)ⁿ</span></label><input id="nP" type="number" step="0.05" value="0.35"></div>
@@ -326,11 +326,12 @@ KMnO₄ 1 bồn (kg) = dung tích (m³) × nồng độ % × 10
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const DEF={fFe:30,fMn:90,k:0.10,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO:60,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
+const DEF={fFe:10,fMn:90,k:0.15,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO:60,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
 const IN=['Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const saved=store.get('tx_inputs7'); if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.src){const r=document.querySelector('input[name=src][value='+saved.src+']'); if(r) r.checked=true;}
+const saved=store.get('tx_inputs7'); if(saved&&!saved.m11){saved.fFe=10;saved.k=0.15;}
+if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.src){const r=document.querySelector('input[name=src][value='+saved.src+']'); if(r) r.checked=true;}
 if(saved&&saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
 log=store.get('tx_log3')||[];
 
@@ -488,7 +489,7 @@ function render(){
   if(!(P.Omax>0)) a=`<div class="msg bad">Nhập công suất tối đa máy ozone (g/h) để tính phương án ② và ③.</div>`+a;
   $('advice').innerHTML=a;
   renderRun(P);
-  const s={}; IN.forEach(id=>s[id]=$(id).value); s.pos=pos(); s.src=src(); store.set('tx_inputs7',s);
+  const s={}; IN.forEach(id=>s[id]=$(id).value); s.pos=pos(); s.src=src(); s.m11=1; store.set('tx_inputs7',s);
 }
 
 function renderRun(P){
@@ -518,7 +519,7 @@ function renderLog(){
 IN.forEach(id=>$(id).addEventListener('input',render));
 document.querySelectorAll('input[name=pos]').forEach(e=>e.addEventListener('change',render));
 document.querySelectorAll('input[name=src]').forEach(e=>e.addEventListener('change',render));
-$('reset').onclick=()=>{Object.keys(DEF).forEach(k=>$(k).value=DEF[k]);render();};
+$('reset').onclick=()=>{Object.keys(DEF).forEach(k=>$(k).value=DEF[k]);render();renderLabs();};
 if(0)$('cR0').onclick=()=>{const a=v('cPIr'),b=v('cPIo'); if(a>0&&b>=0&&b<a){const R=Math.round((1-b/a)*100); $('R0').value=R; $('PACr').value=$('PAC').value; $('cR0out').textContent='R₀ = '+R+'% ở PAC '+$('PAC').value+' g/m³ (đã áp dụng)'; render();} else $('cR0out').textContent='Nhập PI thô > PI ra mạng';};
 $('save').onclick=()=>{ if(!last)return; const P=last.P, t=new Date().toLocaleString('vi-VN',{hour12:false});
   const names={1:'① Chỉ KMnO4',2:'② KMnO4+Ozone ('+P.pos+')',3:'③ Chỉ Ozone'};
