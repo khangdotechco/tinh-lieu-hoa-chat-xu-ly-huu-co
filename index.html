@@ -127,7 +127,7 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
 <body>
 <header>
   <h1>Tính liều lượng hóa chất xử lý hữu cơ</h1>
-  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v0.8</div>
+  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v0.9</div>
 </header>
 
 <main>
@@ -136,10 +136,19 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
     <h2>Số đo nước thô <span class="badge">máy cầm tay</span></h2>
     <div class="grid2">
       <div class="field"><label>Lưu lượng Q <span class="unit">m³/h</span></label><input id="Q" type="number" step="1" value="115" inputmode="decimal"></div>
-      <div class="field"><label>Sắt tổng Fe <span class="unit">mg/L</span></label><input id="Fe" type="number" step="0.01" value="1.80" inputmode="decimal"></div>
-      <div class="field"><label>Mangan Mn <span class="unit">mg/L</span></label><input id="Mn" type="number" step="0.001" value="0.288" inputmode="decimal"></div>
+      <div class="field"><label>Sắt <b>tổng</b> Fe <span class="unit">mg/L</span></label><input id="Fe" type="number" step="0.01" value="1.80" inputmode="decimal"></div>
+      <div class="field"><label>Mangan <b>tổng</b> Mn <span class="unit">mg/L</span></label><input id="Mn" type="number" step="0.001" value="0.288" inputmode="decimal"></div>
       <div class="field"><label>Chỉ số PI <span class="unit">mg/L O₂</span></label><input id="PI" type="number" step="0.01" value="4.86" inputmode="decimal"></div>
       <div class="field"><label>PI mục tiêu ra mạng <span class="unit">mg/L O₂</span></label><input id="PIt" type="number" step="0.1" value="1.8" inputmode="decimal"></div>
+    </div>
+    <div class="msg info" style="margin-top:0">
+      <b>Máy cầm tay chỉ đo Fe, Mn TỔNG.</b> Chỉ phần hòa tan (Fe²⁺, Mn²⁺) mới tiêu hao KMnO₄ / ozone; phần dạng hạt bị keo tụ – lắng loại bỏ.
+      Để tính sát: lọc mẫu nước thô qua giấy lọc <b>ngay khi lấy</b>, đo lại và nhập 2 ô dưới (để trống → app dùng tỷ lệ ước tính trong ⚙️).
+      <div class="grid2" style="margin-top:6px">
+        <div><label>Fe sau lọc giấy <span class="unit">mg/L (tùy chọn)</span></label><input id="FeD" type="number" step="0.01" inputmode="decimal" placeholder="để trống"></div>
+        <div><label>Mn sau lọc giấy <span class="unit">mg/L (tùy chọn)</span></label><input id="MnD" type="number" step="0.001" inputmode="decimal" placeholder="để trống"></div>
+      </div>
+      <div id="spec" style="margin-top:6px;font-size:12.5px"></div>
     </div>
     <div class="hint">QCĐP: PI ≤ 2.0 · Fe ≤ 0.3 · Mn ≤ 0.1 mg/L. Nên đặt PI mục tiêu 1.5–1.8 để có biên an toàn.</div>
     <button class="btn jump" id="jump">Xem kết quả liều châm ↓</button>
@@ -188,6 +197,7 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
       <summary>⚙️ Hệ số hiệu chỉnh (mặc định suy từ đợt 22/10 &amp; 26/10)</summary>
       <div class="grid2" style="margin-top:8px">
         <div class="field"><label>Tỷ lệ Fe²⁺ / Fe tổng <span class="unit">%</span></label><input id="fFe" type="number" step="5" value="30"><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
+        <div class="field"><label>Tỷ lệ Mn²⁺ / Mn tổng <span class="unit">%</span></label><input id="fMn" type="number" step="5" value="90"><div class="hint">Mn trong nước mặt phần lớn ở dạng hòa tan. Dùng khi không nhập Mn sau lọc giấy.</div></div>
         <div class="field"><label>Hữu cơ tiêu hao KMnO₄ k <span class="unit">g/m³ cho mỗi mg/L PI</span></label><input id="k" type="number" step="0.01" value="0.10"></div>
         <div class="field"><label>KMnO₄ dư an toàn <span class="unit">g/m³</span></label><input id="res" type="number" step="0.05" value="0.20"></div>
         <div class="field"><label>Hiệu suất khử PI của keo tụ – lọc R₀ <span class="unit">% (ở liều PAC tham chiếu)</span></label><input id="R0" type="number" step="1" value="57"><div class="hint">Đợt 22/10 đạt 59%.</div></div>
@@ -278,6 +288,10 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
   O₃ (nhận 2e⁻):               1 g ≡ 0.333 g O₂
   → PI giảm = lý thuyết × hiệu suất η (ηK, ηO)
 
+FE, MN HÒA TAN (máy cầm tay đo Fe, Mn tổng)
+ Fe²⁺ = Fe sau lọc giấy, hoặc Fe tổng × tỷ lệ Fe²⁺
+ Mn²⁺ = Mn sau lọc giấy, hoặc Mn tổng × tỷ lệ Mn²⁺
+
 PI SAU KEO TỤ – LỌC
  R = R₀ × (PAC / PAC tham chiếu)ⁿ  (≤ hiệu suất tối đa)
  PI sau keo tụ = PI thô × (1 − R)
@@ -305,11 +319,11 @@ KMnO₄ 1 bồn (kg) = dung tích (m³) × nồng độ % × 10
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const DEF={fFe:30,k:0.10,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO:60,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
-const IN=['Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','fFe','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
+const DEF={fFe:30,fMn:90,k:0.10,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO:60,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
+const IN=['Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const saved=store.get('tx_inputs6'); if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
+const saved=store.get('tx_inputs7'); if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
 log=store.get('tx_log3')||[];
 
 const v=id=>{const x=parseFloat(String($(id).value).replace(',','.'));return isFinite(x)?x:0};
@@ -321,7 +335,11 @@ function base(){
     PAC:v('PAC'),PA:v('PA'),PACr:v('PACr'),nP:v('nP'),Rcap:v('Rcap')/100,
     f:v('fFe')/100,k:v('k'),res:v('res'),R0:v('R0')/100,eK:v('eK')/100,Kmax:v('Kmax')||5,eO:v('eO')/100,
     kO:v('kO'),Ores:v('Ores'),TE:(v('TE')/100)||0.7,Opink:v('Opink'),pos:pos()};
-  P.Fe2=P.Fe*P.f;
+  P.fMn=v('fMn')/100;
+  const has=id=>String($(id).value).trim()!=='';
+  P.FeMeas=has('FeD'); P.MnMeas=has('MnD');
+  P.Fe2=P.FeMeas?Math.min(v('FeD'),P.Fe||v('FeD')):P.Fe*P.f;
+  P.Mn2=P.MnMeas?Math.min(v('MnD'),P.Mn||v('MnD')):P.Mn*P.fMn;
   P.Rc=(P.PAC>0&&P.PACr>0)?Math.min(P.Rcap,P.R0*Math.pow(P.PAC/P.PACr,P.nP)):P.R0;   // hiệu suất keo tụ ở liều PAC hiện tại
   P.PIc=P.PI*(1-P.Rc);                         // PI sau keo tụ – lọc (chưa tính oxy hóa thêm)
   P.dPI=Math.max(0,P.PIc-P.PIt);               // PI còn phải oxy hóa
@@ -351,7 +369,7 @@ const okPI=(PIo,P)=>PIo<=P.PIt+1e-9;
 
 // ① chỉ KMnO4
 function plan1(P){
-  const Fe=0.94*P.Fe2, Mn=1.92*P.Mn, nom=P.k*P.PI, need=Fe+Mn+nom+P.res;
+  const Fe=0.94*P.Fe2, Mn=1.92*P.Mn2, nom=P.k*P.PI, need=Fe+Mn+nom+P.res;
   let extra=P.sK>0?P.dPI/P.sK:0, capped=false;
   if(need+extra>P.Kmax){extra=Math.max(0,P.Kmax-need);capped=true;}
   const PIo=P.PIc-P.sK*extra;
@@ -359,7 +377,7 @@ function plan1(P){
 }
 // ② KMnO4 lo Fe, Mn ; ozone lo PI (tới 100% công suất máy)
 function plan2(P){
-  const Fe=0.94*P.Fe2, Mn=1.92*P.Mn, comp=(P.pos==='B'?0.5:1)*P.k*P.PI, K=Fe+Mn+comp+P.res;
+  const Fe=0.94*P.Fe2, Mn=1.92*P.Mn2, comp=(P.pos==='B'?0.5:1)*P.k*P.PI, K=Fe+Mn+comp+P.res;
   let Opi=P.sO>0?P.dPI/P.sO:0, capped=false;
   if(Opi>P.Odmax){Opi=P.Odmax;capped=true;}
   const PIo=P.PIc-P.sO*Opi;
@@ -367,7 +385,7 @@ function plan2(P){
 }
 // ③ chỉ ozone
 function plan3(P){
-  const Fe=0.43*P.Fe2, Mn=0.87*P.Mn, nom=P.kO*P.PI, basic=Fe+Mn+nom+P.Ores;
+  const Fe=0.43*P.Fe2, Mn=0.87*P.Mn2, nom=P.kO*P.PI, basic=Fe+Mn+nom+P.Ores;
   const avail=Math.max(0,P.Odmax-basic);
   let Opi=P.sO>0?P.dPI/P.sO:0, capped=false;
   if(Opi>avail){Opi=avail;capped=true;}
@@ -388,7 +406,7 @@ function table(r,P){
   let h=`<table><tr><th>Xử lý</th>${hasK?'<th class="n km">KMnO₄<br>g/m³</th>':''}${hasO?'<th class="n oz">Ozone<br>mg/L</th>':''}</tr>`;
   const row=(lab,k,o)=>`<tr><td>${lab}</td>${hasK?cell(k):''}${hasO?cell(o):''}</tr>`;
   h+=row(`Sắt Fe²⁺ (${f(P.Fe2)} mg/L)`, hasK?r.K.Fe:0, hasO?r.O.Fe:0);
-  h+=row(`Mangan Mn (${f(P.Mn,3)} mg/L)`, hasK?r.K.Mn:0, hasO?r.O.Mn:0);
+  h+=row(`Mangan Mn²⁺ (${f(P.Mn2,3)} mg/L)`, hasK?r.K.Mn:0, hasO?r.O.Mn:0);
   h+=row(`PI: oxy hóa ${f(P.PIc)} → ${f(r.PIo)}`, hasK?r.K.PI:0, hasO?r.O.PI:0);
   if(r.id===2) h+=row(`Bù hữu cơ cạnh tranh${P.pos==='B'?' (×0.5)':''}`, r.K.comp, 0);
   h+=row('Dư an toàn', hasK?r.K.res:0, hasO?r.O.res:0);
@@ -444,6 +462,7 @@ function card(r,P){
 let last=null;
 function render(){
   const P=base(); const r1=plan1(P), r2=plan2(P), r3=plan3(P); last={P,rs:[r1,r2,r3]};
+  $('spec').innerHTML=`App đang tính với: Fe²⁺ = <b>${f(P.Fe2)}</b> mg/L (${P.FeMeas?'đo sau lọc giấy':f(P.f*100,0)+'% Fe tổng – ước tính'}) · Mn²⁺ = <b>${f(P.Mn2,3)}</b> mg/L (${P.MnMeas?'đo sau lọc giấy':f(P.fMn*100,0)+'% Mn tổng – ước tính'})`;
   $('qbadge').textContent='Q = '+f(P.Q,0)+' m³/h';
   $('plans').innerHTML=card(r1,P)+card(r2,P)+card(r3,P);
   let a='';
@@ -457,12 +476,12 @@ function render(){
   if(!(P.Omax>0)) a=`<div class="msg bad">Nhập công suất tối đa máy ozone (g/h) để tính phương án ② và ③.</div>`+a;
   $('advice').innerHTML=a;
   renderRun(P);
-  const s={}; IN.forEach(id=>s[id]=$(id).value); s.pos=pos(); store.set('tx_inputs6',s);
+  const s={}; IN.forEach(id=>s[id]=$(id).value); s.pos=pos(); store.set('tx_inputs7',s);
 }
 
 function renderRun(P){
   const K=v('rK'), Ogh=v('rO');
-  const need=0.94*P.Fe2+1.92*P.Mn+P.k*P.PI+P.res;
+  const need=0.94*P.Fe2+1.92*P.Mn2+P.k*P.PI+P.res;
   const Oapp=P.Q>0?Ogh/P.Q:0, Odis=Oapp*P.TE, eq=K+2.2*Odis, ratio=need>0?eq/need:0;
   let cls='ok',txt='Tổng chất oxy hóa phù hợp nhu cầu Fe, Mn, hữu cơ.';
   if(ratio<0.9){cls='bad';txt='THIẾU chất oxy hóa → Mn có thể không đạt.';}
@@ -509,7 +528,7 @@ function analyze(){
   const R0s=[], eOs=[], ks=[], kmaxs=[];
   labs.forEach(x=>{
     const r={x,notes:[]};
-    const Fe2=x.Fe*P.f, need0=0.94*Fe2+1.92*x.Mn;
+    const Fe2=x.Fe*P.f, Mn2=x.Mn*P.fMn, need0=0.94*Fe2+1.92*Mn2;
     const pacF=(x.PAC>0&&P.PACr>0)?Math.pow(x.PAC/P.PACr,P.nP):1;
     // R0 từ lần không ozone
     if(x.on&&!(x.O>0)&&x.PI>0&&x.PIo>0){
@@ -519,7 +538,7 @@ function analyze(){
     }
     // k từ lần không ozone, Mn sau lọc chưa đạt (thiếu thuốc)
     if(x.on&&!(x.O>0)&&x.K>0&&x.PI>0&&x.Mno>0){
-      if(x.Mno>0.05){ const used=1.92*Math.max(0,x.Mn-x.Mno)+0.94*Fe2; const kk=(x.K-used)/x.PI; if(kk>0){ks.push(kk); r.notes.push('Thiếu KMnO₄ → k ≈ '+f(kk,2));} }
+      if(x.Mno>0.05){ const used=1.92*Math.max(0,Mn2-x.Mno)+0.94*Fe2; const kk=(x.K-used)/x.PI; if(kk>0){ks.push(kk); r.notes.push('Thiếu KMnO₄ → k ≈ '+f(kk,2));} }
       else { const km=(x.K-need0)/x.PI; if(km>0){kmaxs.push(km); r.notes.push('Đủ KMnO₄ → k ≤ '+f(km,2));} }
     }
     r.store=x; out.rows.push(r);
