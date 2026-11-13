@@ -127,13 +127,20 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
 <body>
 <header>
   <h1>Tính liều lượng hóa chất xử lý hữu cơ</h1>
-  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v0.9</div>
+  <div class="sub">KMnO₄ · Ozone · NMNM Trường Xuân · bản v1.0</div>
 </header>
 
 <main>
 <section>
   <div class="card">
-    <h2>Số đo nước thô <span class="badge">máy cầm tay</span></h2>
+    <h2>Số đo nước thô</h2>
+    <div class="field"><label>Nguồn số liệu Fe, Mn</label>
+      <div class="seg">
+        <label><input type="radio" name="src" value="H" checked> Máy Hanna tại trạm</label>
+        <label><input type="radio" name="src" value="L"> Kết quả phòng thí nghiệm</label>
+      </div>
+      <div id="srcnote" class="hint"></div>
+    </div>
     <div class="grid2">
       <div class="field"><label>Lưu lượng Q <span class="unit">m³/h</span></label><input id="Q" type="number" step="1" value="115" inputmode="decimal"></div>
       <div class="field"><label>Sắt <b>tổng</b> Fe <span class="unit">mg/L</span></label><input id="Fe" type="number" step="0.01" value="1.80" inputmode="decimal"></div>
@@ -142,11 +149,11 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
       <div class="field"><label>PI mục tiêu ra mạng <span class="unit">mg/L O₂</span></label><input id="PIt" type="number" step="0.1" value="1.8" inputmode="decimal"></div>
     </div>
     <div class="msg info" style="margin-top:0">
-      <b>Máy cầm tay chỉ đo Fe, Mn TỔNG.</b> Chỉ phần hòa tan (Fe²⁺, Mn²⁺) mới tiêu hao KMnO₄ / ozone; phần dạng hạt bị keo tụ – lắng loại bỏ.
-      Để tính sát: lọc mẫu nước thô qua giấy lọc <b>ngay khi lấy</b>, đo lại và nhập 2 ô dưới (để trống → app dùng tỷ lệ ước tính trong ⚙️).
+      <b>Fe, Mn nhập ở trên là số TỔNG</b> (máy Hanna và phiếu PTN đều báo tổng). Chỉ phần hòa tan (Fe²⁺, Mn²⁺) mới tiêu hao KMnO₄ / ozone; phần dạng hạt bị keo tụ – lắng loại bỏ.
+      Nếu có số đo phần hòa tan (mẫu lọc giấy ngay khi lấy rồi đo lại, hoặc PTN báo Fe/Mn hòa tan) thì nhập 2 ô dưới; để trống → app dùng tỷ lệ ước tính trong ⚙️.
       <div class="grid2" style="margin-top:6px">
-        <div><label>Fe sau lọc giấy <span class="unit">mg/L (tùy chọn)</span></label><input id="FeD" type="number" step="0.01" inputmode="decimal" placeholder="để trống"></div>
-        <div><label>Mn sau lọc giấy <span class="unit">mg/L (tùy chọn)</span></label><input id="MnD" type="number" step="0.001" inputmode="decimal" placeholder="để trống"></div>
+        <div><label>Fe hòa tan <span class="unit">mg/L (tùy chọn)</span></label><input id="FeD" type="number" step="0.01" inputmode="decimal" placeholder="để trống"></div>
+        <div><label>Mn hòa tan <span class="unit">mg/L (tùy chọn)</span></label><input id="MnD" type="number" step="0.001" inputmode="decimal" placeholder="để trống"></div>
       </div>
       <div id="spec" style="margin-top:6px;font-size:12.5px"></div>
     </div>
@@ -288,9 +295,9 @@ h2.fold .chev{color:var(--mute);font-size:14px;transition:transform .15s;margin-
   O₃ (nhận 2e⁻):               1 g ≡ 0.333 g O₂
   → PI giảm = lý thuyết × hiệu suất η (ηK, ηO)
 
-FE, MN HÒA TAN (máy cầm tay đo Fe, Mn tổng)
- Fe²⁺ = Fe sau lọc giấy, hoặc Fe tổng × tỷ lệ Fe²⁺
- Mn²⁺ = Mn sau lọc giấy, hoặc Mn tổng × tỷ lệ Mn²⁺
+FE, MN HÒA TAN (máy Hanna và PTN đều báo Fe, Mn tổng)
+ Fe²⁺ = Fe hòa tan đo được, hoặc Fe tổng × tỷ lệ Fe²⁺
+ Mn²⁺ = Mn hòa tan đo được, hoặc Mn tổng × tỷ lệ Mn²⁺
 
 PI SAU KEO TỤ – LỌC
  R = R₀ × (PAC / PAC tham chiếu)ⁿ  (≤ hiệu suất tối đa)
@@ -323,12 +330,14 @@ const DEF={fFe:30,fMn:90,k:0.10,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO
 const IN=['Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const saved=store.get('tx_inputs7'); if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
+const saved=store.get('tx_inputs7'); if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.src){const r=document.querySelector('input[name=src][value='+saved.src+']'); if(r) r.checked=true;}
+if(saved&&saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
 log=store.get('tx_log3')||[];
 
 const v=id=>{const x=parseFloat(String($(id).value).replace(',','.'));return isFinite(x)?x:0};
 const f=(x,d=2)=>isFinite(x)?x.toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d}):'–';
 const pos=()=>document.querySelector('input[name=pos]:checked').value;
+const src=()=>document.querySelector('input[name=src]:checked').value;
 
 function base(){
   const P={Q:v('Q'),Fe:v('Fe'),Mn:v('Mn'),PI:v('PI'),PIt:v('PIt'),V:v('V')*1000,Hmin:v('Hmin'),Qp:v('Qp'),Hp:v('Hp'),Pl:v('Pl'),Csel:$('Csel').value,Hz:v('Hz')||50,Omax:v('Omax'),Omin:v('Omin')/100,
@@ -462,7 +471,10 @@ function card(r,P){
 let last=null;
 function render(){
   const P=base(); const r1=plan1(P), r2=plan2(P), r3=plan3(P); last={P,rs:[r1,r2,r3]};
-  $('spec').innerHTML=`App đang tính với: Fe²⁺ = <b>${f(P.Fe2)}</b> mg/L (${P.FeMeas?'đo sau lọc giấy':f(P.f*100,0)+'% Fe tổng – ước tính'}) · Mn²⁺ = <b>${f(P.Mn2,3)}</b> mg/L (${P.MnMeas?'đo sau lọc giấy':f(P.fMn*100,0)+'% Mn tổng – ước tính'})`;
+  $('spec').innerHTML=`App đang tính với: Fe²⁺ = <b>${f(P.Fe2)}</b> mg/L (${P.FeMeas?'số đo hòa tan':f(P.f*100,0)+'% Fe tổng – ước tính'}) · Mn²⁺ = <b>${f(P.Mn2,3)}</b> mg/L (${P.MnMeas?'số đo hòa tan':f(P.fMn*100,0)+'% Mn tổng – ước tính'})`;
+  $('srcnote').innerHTML=src()==='H'
+    ? 'Fe: máy HI97721 (0–5 mg/L, ±0,04) – dùng tốt. <b style="color:var(--warn)">Mn: máy HI97709 chỉ phân giải 0,1 mg/L, sai số ±0,2 mg/L</b> → với Mn cỡ 0,2–0,3 mg/L nên nhập Mn theo phiếu PTN gần nhất; Mn sau lọc vẫn phải gửi PTN.'
+    : 'Nhập Fe tổng, Mn tổng, PI theo phiếu PTN. Lưu ý mẫu PTN có độ trễ: nếu nước thô đổi màu/độ đục rõ so với lúc lấy mẫu thì kết quả tính chỉ để tham khảo.';
   $('qbadge').textContent='Q = '+f(P.Q,0)+' m³/h';
   $('plans').innerHTML=card(r1,P)+card(r2,P)+card(r3,P);
   let a='';
@@ -476,7 +488,7 @@ function render(){
   if(!(P.Omax>0)) a=`<div class="msg bad">Nhập công suất tối đa máy ozone (g/h) để tính phương án ② và ③.</div>`+a;
   $('advice').innerHTML=a;
   renderRun(P);
-  const s={}; IN.forEach(id=>s[id]=$(id).value); s.pos=pos(); store.set('tx_inputs7',s);
+  const s={}; IN.forEach(id=>s[id]=$(id).value); s.pos=pos(); s.src=src(); store.set('tx_inputs7',s);
 }
 
 function renderRun(P){
@@ -498,24 +510,25 @@ function renderRun(P){
 
 function renderLog(){
   if(!log.length){$('logbox').innerHTML='<div class="hint">Chưa có lần tính nào được lưu.</div>';return;}
-  let h='<table><tr><th>Thời gian</th><th>Phương án</th><th class="n">Fe</th><th class="n">Mn</th><th class="n">PI</th><th class="n">KMnO₄ g/m³</th><th class="n">Pha %</th><th class="n">Bơm L/h</th><th class="n">O₃ g/h</th><th class="n">PI dự kiến</th></tr>';
-  log.slice().reverse().forEach(x=>{h+=`<tr><td>${x.t}</td><td>${x.mode}</td><td class="n">${f(x.Fe)}</td><td class="n">${f(x.Mn,3)}</td><td class="n">${f(x.PI)}</td><td class="n">${f(x.K)}</td><td class="n">${f(x.c||0,1)}</td><td class="n">${f(x.L,1)}</td><td class="n">${f(x.O,0)}</td><td class="n">${f(x.PIo)}</td></tr>`});
+  let h='<table><tr><th>Thời gian</th><th>Nguồn</th><th>Phương án</th><th class="n">Fe</th><th class="n">Mn</th><th class="n">PI</th><th class="n">KMnO₄ g/m³</th><th class="n">Pha %</th><th class="n">Bơm L/h</th><th class="n">O₃ g/h</th><th class="n">PI dự kiến</th></tr>';
+  log.slice().reverse().forEach(x=>{h+=`<tr><td>${x.t}</td><td>${x.src||''}</td><td>${x.mode}</td><td class="n">${f(x.Fe)}</td><td class="n">${f(x.Mn,3)}</td><td class="n">${f(x.PI)}</td><td class="n">${f(x.K)}</td><td class="n">${f(x.c||0,1)}</td><td class="n">${f(x.L,1)}</td><td class="n">${f(x.O,0)}</td><td class="n">${f(x.PIo)}</td></tr>`});
   $('logbox').innerHTML=h+'</table>';
 }
 
 IN.forEach(id=>$(id).addEventListener('input',render));
 document.querySelectorAll('input[name=pos]').forEach(e=>e.addEventListener('change',render));
+document.querySelectorAll('input[name=src]').forEach(e=>e.addEventListener('change',render));
 $('reset').onclick=()=>{Object.keys(DEF).forEach(k=>$(k).value=DEF[k]);render();};
 if(0)$('cR0').onclick=()=>{const a=v('cPIr'),b=v('cPIo'); if(a>0&&b>=0&&b<a){const R=Math.round((1-b/a)*100); $('R0').value=R; $('PACr').value=$('PAC').value; $('cR0out').textContent='R₀ = '+R+'% ở PAC '+$('PAC').value+' g/m³ (đã áp dụng)'; render();} else $('cR0out').textContent='Nhập PI thô > PI ra mạng';};
 $('save').onclick=()=>{ if(!last)return; const P=last.P, t=new Date().toLocaleString('vi-VN',{hour12:false});
   const names={1:'① Chỉ KMnO4',2:'② KMnO4+Ozone ('+P.pos+')',3:'③ Chỉ Ozone'};
   last.rs.forEach(r=>{const K=r.K?r.K.tot:0; const O=r.O?ozSet(ozGh(r.O.tot,P),P).set:0; const pr=prep(K,P);
-    log.push({t,mode:names[r.id],Q:P.Q,Fe:P.Fe,Mn:P.Mn,PI:P.PI,K,c:pr?pr.c:0,L:pr?pr.q:0,O,PIo:r.PIo});});
+    log.push({t,mode:names[r.id],src:src()==='H'?'Hanna':'PTN',Q:P.Q,Fe:P.Fe,Mn:P.Mn,PI:P.PI,K,c:pr?pr.c:0,L:pr?pr.q:0,O,PIo:r.PIo});});
   store.set('tx_log3',log); renderLog(); $('save').textContent='Đã lưu ✓'; setTimeout(()=>$('save').textContent='Lưu 3 phương án vào nhật ký',1200);};
 $('clear').onclick=()=>{ if($('clear').dataset.c==='1'){log=[];store.set('tx_log3',log);renderLog();$('clear').textContent='Xóa nhật ký';$('clear').dataset.c='';} else {$('clear').textContent='Bấm lần nữa để xóa';$('clear').dataset.c='1';setTimeout(()=>{$('clear').textContent='Xóa nhật ký';$('clear').dataset.c='';},2500);} };
 $('copy').onclick=()=>{
-  const head=['Thoi gian','Phuong an','Q','Fe','Mn','PI','KMnO4 g/m3','Pha %','Bom L/h','O3 g/h','PI du kien'];
-  const tsv=[head.join('\t')].concat(log.map(x=>[x.t,x.mode,x.Q,x.Fe,x.Mn,x.PI,x.K.toFixed(2),(x.c||0),x.L.toFixed(1),Math.round(x.O),x.PIo.toFixed(2)].join('\t'))).join('\n');
+  const head=['Thoi gian','Nguon','Phuong an','Q','Fe','Mn','PI','KMnO4 g/m3','Pha %','Bom L/h','O3 g/h','PI du kien'];
+  const tsv=[head.join('\t')].concat(log.map(x=>[x.t,(x.src||''),x.mode,x.Q,x.Fe,x.Mn,x.PI,x.K.toFixed(2),(x.c||0),x.L.toFixed(1),Math.round(x.O),x.PIo.toFixed(2)].join('\t'))).join('\n');
   const ta=$('csv'); ta.value=tsv; ta.style.display='block';
   try{ navigator.clipboard.writeText(tsv).then(()=>{$('copymsg').textContent='Đã sao chép — dán vào Excel.'},()=>{ta.select();$('copymsg').textContent='Bôi đen ô bên dưới và nhấn Ctrl+C.'}); }catch(e){ta.select();$('copymsg').textContent='Bôi đen ô bên dưới và nhấn Ctrl+C.';}
 };
