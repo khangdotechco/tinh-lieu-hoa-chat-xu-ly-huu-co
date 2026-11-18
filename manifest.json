@@ -1,7 +1,7 @@
 {
   "name": "Tính liều lượng hóa chất xử lý hữu cơ",
   "short_name": "Liều hóa chất",
-  "description": "Tính liều KMnO₄, ozone, pha bồn và cài đặt bơm cho NMNM Trường Xuân.",
+  "description": "Tính liều KMnO₄, ozone, pha bồn và cài đặt bơm cho nhà máy nước.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

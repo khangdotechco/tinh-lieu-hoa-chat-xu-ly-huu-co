@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Liều hóa chất">
-<title>Tính liều lượng hóa chất xử lý hữu cơ · NMNM Trường Xuân</title>
+<title>Tính liều lượng hóa chất xử lý hữu cơ</title>
 <style>
 :root{
   --bg:#f2f4f8;--card:#fff;--ink:#17202a;--mute:#6b7785;--line:#e3e8ef;--soft:#f6f8fb;
@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub">NMNM Trường Xuân · v1.5</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.6</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -273,7 +273,7 @@ details.sub[open]>summary::before{content:'▾ '}
       <div class="f"><label>Q</label><div class="in"><input id="Q" type="number" step="1" value="115" inputmode="decimal"><span>m³/h</span></div></div>
       <div class="f"><label>PAC</label><div class="in"><input id="PAC" type="number" step="1" value="30" inputmode="decimal"><span>g/m³</span></div></div>
     </div>
-    <div class="hint">pH nước thô (tùy chọn): khi pH &lt; 6 (nước phèn Đồng Tháp Mười – lũ rút tháng 12–1, đầu mùa mưa tháng 4–6) Fe tồn tại nhiều ở dạng Fe²⁺, app tự nâng tỷ lệ Fe²⁺ theo mục Hệ số, trừ khi đã nhập Fe hòa tan đo được.</div>
+    <div class="hint">pH nước thô (tùy chọn): khi pH &lt; 6 (nước nhiễm phèn – vùng đất phèn thường gặp khi lũ rút và đầu mùa mưa) Fe tồn tại nhiều ở dạng Fe²⁺, app tự nâng tỷ lệ Fe²⁺ theo mục Hệ số, trừ khi đã nhập Fe hòa tan đo được.</div>
     <div class="hint">Fe, Mn nhập là số <b>tổng</b> (máy Hanna và phiếu PTN đều báo tổng). Chỉ phần hòa tan (Fe²⁺, Mn²⁺) tiêu hao KMnO₄ / ozone; phần dạng hạt bị keo tụ – lắng loại bỏ. Nên đặt PI mục tiêu 1.5–1.8 để có biên an toàn.</div>
     <details class="more" id="dissolved">
       <summary>Fe, Mn hòa tan: số đo hoặc tỷ lệ %</summary>
@@ -286,8 +286,8 @@ details.sub[open]>summary::before{content:'▾ '}
       <div class="sect">Tỷ lệ % khi không có số đo</div>
       <div class="grid">
       <div class="f"><label>Fe²⁺ / Fe tổng</label><div class="in"><input id="fFe" type="number" step="5" value="10"><span>%</span></div><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
-      <div class="f"><label>Mn²⁺ / Mn tổng</label><div class="in"><input id="fMn" type="number" step="5" value="90"><span>%</span></div><div class="hint">Mn(II) oxy hóa bằng O₂ rất chậm ở pH 6–8. Đợt 22/10: ≥ 65% Mn lọt qua dây chuyền → phần lớn hòa tan.</div></div>
-      <div class="f"><label>Fe²⁺ khi pH 5–6</label><div class="in"><input id="fFe6" type="number" step="5" value="30"><span>%</span></div><div class="hint">Nước phèn: Fe²⁺/Fe tổng đo được 8–66% ở kênh pH ≈ 3 (Plain of Reeds). Giá trị ước tính, cần đo kiểm chứng.</div></div>
+      <div class="f"><label>Mn²⁺ / Mn tổng</label><div class="in"><input id="fMn" type="number" step="5" value="90"><span>%</span></div><div class="hint">Mn(II) oxy hóa bằng O₂ rất chậm ở pH 6–8 nên Mn trong nước mặt phần lớn ở dạng hòa tan.</div></div>
+      <div class="f"><label>Fe²⁺ khi pH 5–6</label><div class="in"><input id="fFe6" type="number" step="5" value="30"><span>%</span></div><div class="hint">Nước phèn: tài liệu ghi nhận Fe²⁺ chiếm khoảng 8–66% Fe tổng ở kênh pH thấp. Giá trị ước tính, cần đo kiểm chứng.</div></div>
       <div class="f"><label>Fe²⁺ khi pH &lt; 5</label><div class="in"><input id="fFe5" type="number" step="5" value="50"><span>%</span></div></div>
     </div>
       <div class="row"><button class="btn sec sm" id="resetR">Về mặc định (10 / 90 / 30 / 50 %)</button></div>
@@ -313,6 +313,11 @@ details.sub[open]>summary::before{content:'▾ '}
 <section class="page" id="pg-dev" hidden>
  <div class="two">
   <div class="stack">
+   <div class="card">
+    <div class="ch"><h2>Nhà máy</h2><button class="ibtn">i</button></div>
+    <div class="f"><label>Tên nhà máy / trạm</label><input id="plant" type="text" placeholder="vd Nhà máy nước A"></div>
+    <div class="hint">Tên hiện dưới tiêu đề app, trên báo cáo và tên file xuất ra. Mỗi điện thoại dùng cho một nhà máy; nếu dùng cho nhiều nhà máy, sao lưu dữ liệu riêng cho từng nhà máy (tab Báo cáo).</div>
+   </div>
    <div class="card">
     <div class="ch"><h2>Bồn pha &amp; bơm KMnO₄</h2><button class="ibtn">i</button></div>
     <div class="grid">
@@ -346,7 +351,7 @@ details.sub[open]>summary::before{content:'▾ '}
     <div class="ch"><h2>Keo tụ</h2><button class="ibtn">i</button></div>
     <div class="grid">
       <div class="f"><label>Liều PA (polymer)</label><div class="in"><input id="PA" type="number" step="0.05" value="0.3" inputmode="decimal"><span>g/m³</span></div><div class="hint">Chỉ ghi nhận — polymer giúp lắng bông, hầu như không khử PI.</div></div>
-      <div class="f"><label>PAC tham chiếu</label><div class="in"><input id="PACr" type="number" step="1" value="30" inputmode="decimal"><span>g/m³</span></div><div class="hint">Liều PAC của ngày dùng để hiệu chỉnh R₀ (vd 22/10).</div></div>
+      <div class="f"><label>PAC tham chiếu</label><div class="in"><input id="PACr" type="number" step="1" value="30" inputmode="decimal"><span>g/m³</span></div><div class="hint">Liều PAC của lần thử dùng để hiệu chỉnh R₀.</div></div>
     </div>
     <div class="hint">Liều PAC đang châm nhập ở tab Tính liều. Hiệu suất khử PI của keo tụ – lắng – lọc tính theo liều PAC (quan hệ kinh nghiệm, cần hiệu chỉnh bằng số liệu thực).</div>
    </div>
@@ -355,7 +360,7 @@ details.sub[open]>summary::before{content:'▾ '}
   <div class="card">
    <details class="acc" id="calib">
     <summary>Hệ số tính toán</summary>
-    <div class="note" style="margin:-4px 0 12px">Mặc định suy từ đợt 22/10 &amp; 26/10. Bấm <b>i</b> để xem giải thích từng hệ số. Tỷ lệ Fe²⁺/Mn²⁺ (%) chỉnh ở tab Tính liều › Fe, Mn hòa tan.</div>
+    <div class="note" style="margin:-4px 0 12px">Giá trị mặc định là điểm xuất phát, cần hiệu chỉnh theo số liệu thử nghiệm của từng nhà máy. Bấm <b>i</b> để xem giải thích từng hệ số. Tỷ lệ Fe²⁺/Mn²⁺ (%) chỉnh ở tab Tính liều › Fe, Mn hòa tan.</div>
     <div style="display:flex;justify-content:flex-end;margin:-6px 0 6px"><button class="ibtn" style="margin:0">i</button></div>
     <div class="sect">KMnO₄</div>
     <div class="grid">
@@ -366,7 +371,7 @@ details.sub[open]>summary::before{content:'▾ '}
     </div>
     <div class="sect">Keo tụ</div>
     <div class="grid3">
-      <div class="f"><label>R₀</label><div class="in"><input id="R0" type="number" step="1" value="57"><span>%</span></div><div class="hint">Hiệu suất khử PI ở PAC tham chiếu. Đợt 22/10 đạt 59%.</div></div>
+      <div class="f"><label>R₀</label><div class="in"><input id="R0" type="number" step="1" value="57"><span>%</span></div><div class="hint">Hiệu suất khử PI ở PAC tham chiếu.</div></div>
       <div class="f"><label>Số mũ n</label><div class="in"><input id="nP" type="number" step="0.05" value="0.35"></div><div class="hint">R = R₀ × (PAC/PAC tham chiếu)ⁿ</div></div>
       <div class="f"><label>Tối đa</label><div class="in"><input id="Rcap" type="number" step="1" value="70"><span>%</span></div></div>
     </div>
@@ -439,7 +444,7 @@ details.sub[open]>summary::before{content:'▾ '}
    </div>
   <div class="card">
     <div class="ch"><h2>Kiểm tra liều đang chạy</h2><button class="ibtn">i</button></div>
-    <div class="hint" style="margin:-4px 0 12px">Nhập liều KMnO₄ và ozone ca trực đang cài đặt. App so tổng chất oxy hóa đang cấp với nhu cầu của nước thô (tab Tính liều) để biết dư hay thiếu. Ví dụ đợt 26/10 (2.6 g/m³ + 360 g/h) dư khoảng 4 lần → giải thích ánh vàng và Mn sau lắng tăng.</div>
+    <div class="hint" style="margin:-4px 0 12px">Nhập liều KMnO₄ và ozone ca trực đang cài đặt. App so tổng chất oxy hóa đang cấp với nhu cầu của nước thô (tab Tính liều) để biết dư hay thiếu. Tỷ lệ cấp / nhu cầu lớn hơn 1,5 lần thường gây ánh vàng / hồng và Mn sau lắng tăng.</div>
     <div class="grid">
       <div class="f"><label>KMnO₄ đang châm</label><div class="in"><input id="rK" type="number" step="0.1" value="2.6" inputmode="decimal"><span>g/m³</span></div></div>
       <div class="f"><label>Ozone đang chạy</label><div class="in"><input id="rO" type="number" step="10" value="360" inputmode="decimal"><span>g/h</span></div></div>
@@ -458,7 +463,7 @@ details.sub[open]>summary::before{content:'▾ '}
     <div class="ch"><h2>Báo cáo kết quả thử nghiệm</h2><button class="ibtn">i</button></div>
     <div class="hint" style="margin:-4px 0 12px">Báo cáo gồm: tóm tắt các lần thử (đối chiếu QCĐP), bảng chi tiết từng phiếu, tỷ lệ Fe/Mn hòa tan và hệ số hiệu chỉnh, liều đề xuất với nước thô đang nhập ở tab Tính liều. Chỉ lấy các phiếu đang đánh dấu <b>Dùng</b>. Trên điện thoại: bấm "In / Lưu PDF" rồi chọn "Lưu dưới dạng PDF" để gửi qua Zalo.</div>
     <div class="grid">
-      <div class="f"><label>Đơn vị</label><input id="rpUnit" type="text" value="Chi nhánh Cấp nước Đông Bắc Sông Tiền"></div>
+      <div class="f"><label>Đơn vị</label><input id="rpUnit" type="text" placeholder="Tên đơn vị (không bắt buộc)"></div>
       <div class="f"><label>Người lập</label><input id="rpBy" type="text" placeholder="Họ tên"></div>
     </div>
     <div class="row">
@@ -507,7 +512,7 @@ FE, MN HÒA TAN (máy Hanna và PTN đều báo Fe, Mn tổng)
  Fe²⁺ = Fe hòa tan đo được, hoặc Fe tổng × tỷ lệ Fe²⁺
  Mn²⁺ = Mn hòa tan đo được, hoặc Mn tổng × tỷ lệ Mn²⁺
  Nếu nhập pH thô: pH 5–6 → tỷ lệ Fe²⁺ ≥ 30%; pH &lt; 5 → ≥ 50%
-   (nước phèn Đồng Tháp Mười; giá trị ước tính, chỉnh trong Hệ số)
+   (nước nhiễm phèn; giá trị ước tính, chỉnh trong mục Fe, Mn hòa tan)
 
 PI SAU KEO TỤ – LỌC
  R = R₀ × (PAC / PAC tham chiếu)ⁿ  (≤ hiệu suất tối đa)
@@ -528,7 +533,7 @@ Bơm KMnO₄ (L/h) = liều × Q / (10 × nồng độ pha %)
 KMnO₄ 1 bồn (kg) = dung tích (m³) × nồng độ % × 10
 Áp lực bơm H ≥ áp lực ống tại điểm châm + 0.5 bar</div>
     <p class="note">KMnO₄ hầu như không tự oxy hóa được hữu cơ (oxy hóa hết PI 4.86 cần ≈ 32 g/m³). PI giảm chủ yếu nhờ keo tụ – lọc; KMnO₄ dư (bông MnO₂) và ozone liều thấp hỗ trợ thêm. App không tính Amoni.</p>
-    <p class="note">Hệ số mặc định suy từ 2 đợt thử (22/10, 26/10/2026) và tài liệu kỹ thuật, cần hiệu chỉnh theo kết quả đợt 3. Luôn đối chiếu bằng phép thử cốc và kit đo Mn sau lọc trước khi đổi liều trên dây chuyền.</p>
+    <p class="note">Hệ số mặc định suy từ số liệu thử nghiệm ban đầu và tài liệu kỹ thuật, cần hiệu chỉnh theo kết quả thử nghiệm của từng nhà máy. Luôn đối chiếu bằng phép thử cốc và kit đo Mn sau lọc trước khi đổi liều trên dây chuyền.</p>
    </details>
   </div>
  </div>
@@ -542,7 +547,7 @@ KMnO₄ 1 bồn (kg) = dung tích (m³) × nồng độ % × 10
 (function(){
 const $=id=>document.getElementById(id);
 const DEF={fFe:10,fFe6:30,fFe5:50,fMn:90,k:0.15,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO:60,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
-const IN=['pH','fFe6','fFe5','Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
+const IN=['plant','pH','fFe6','fFe5','Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const saved=store.get('tx_inputs7'); if(saved&&!saved.m11){saved.fFe=10;saved.k=0.15;}
@@ -720,7 +725,7 @@ function render(){
   $('srcnote').innerHTML=src()==='H'
     ? 'Fe: máy HI97721 (0–5 mg/L, ±0,04) – dùng tốt. <b style="color:var(--warn)">Mn: máy HI97709 chỉ phân giải 0,1 mg/L, sai số ±0,2 mg/L</b> → với Mn cỡ 0,2–0,3 mg/L nên nhập Mn theo phiếu PTN gần nhất; Mn sau lọc vẫn phải gửi PTN.'
     : 'Nhập Fe tổng, Mn tổng, PI theo phiếu PTN. Mẫu PTN có độ trễ: nếu nước thô đổi màu/độ đục rõ so với lúc lấy mẫu thì kết quả chỉ để tham khảo.';
-  $('qbadge').textContent='Q '+f(P.Q,0)+' m³/h';
+  $('qbadge').textContent='Q '+f(P.Q,0)+' m³/h'; {const pn=$('plant').value.trim(); $('plantName').textContent=pn?pn+' · ':'';}
 
   // Hero đề xuất
   const R=rs[rec-1], allBad=!r1.ok&&!r2.ok;
@@ -809,7 +814,7 @@ $('copy').onclick=()=>{
 
 // ===== Phiếu ghi & hiệu chỉnh từ xét nghiệm =====
 let labs=store.get('tx_labs');
-if(!Array.isArray(labs)) labs=[{d:'22/10 (đợt 1)',src:'PTN',Q:115,PAC:null,K:1.0,O:0,Fe:1.97,Feo:0.02,Mn:0.248,Mno:0.162,PI:4.48,PIo:1.84,on:true}];
+if(!Array.isArray(labs)) labs=[];
 const fv=(x,d=2)=>(x===null||x===undefined||x===''||!isFinite(x))?'–':f(+x,d);
 const XF={d:'xD',t:'xT',src:'xSrc',Q:'xQ',PAC:'xPAC',K:'xK',O:'xO',pHm:'xpHm',pH:'xpH',pHo:'xpHo',Tu:'xTu',Tuo:'xTuo',Fe:'xFe',Feo:'xFeo',FeD:'xFeD',Mn:'xMn',Mno:'xMno',MnD:'xMnD',Mns:'xMns',PI:'xPI',PIo:'xPIo',NH:'xNH',NHo:'xNHo',clo:'xClo',col:'xCol',note:'xN'};
 const XTXT=['d','t','src','col','note'];
@@ -933,10 +938,11 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.5';
+const VER='1.6';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
+function slug(){const t=$('plant').value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,''); return t?t+'_':'';}
 function stamp(){const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes());}
 function buildReport(){
   render(); const P=last.P, rs=last.rs, rec=last.rec, A=analyze();
@@ -954,14 +960,14 @@ function buildReport(){
   const crow=(lab,cur,nw,n,fmt)=>`<tr><td>${lab}</td><td class="n">${fmt(cur)}</td><td class="n"><b>${nw==null?'–':fmt(nw)}</b></td><td class="n">${n}</td></tr>`;
   const pc=x=>f(x*100,0)+'%';
   const plan=r=>{const os=r.O?ozOf(r,P):null; return `<tr${r.id===rec?' class="rec"':''}><td>${NUM[r.id]} ${NAME[r.id]}${r.id===rec?' <b>(đề xuất)</b>':''}</td><td class="n">${r.K?f(r.K.tot):'–'}</td><td class="n">${os?f(os.set,0):'–'}</td><td class="n">${qc(r.PIo,P.PIt,2)}</td><td>${r.ok?'Đạt mục tiêu':'Chưa đạt'}</td></tr>`;};
-  const unit=esc($('rpUnit').value), by=esc($('rpBy').value);
-  return `<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Báo cáo thử nghiệm tiền xử lý – NMNM Trường Xuân</title>
+  const unit=esc($('rpUnit').value), by=esc($('rpBy').value), plant=esc($('plant').value.trim());
+  return `<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Báo cáo thử nghiệm tiền xử lý${plant?" – "+plant:""}</title>
 <style>@page{size:A4;margin:14mm 12mm}body{font-family:"Times New Roman",Times,serif;font-size:12.5pt;color:#000;margin:16px;line-height:1.35}
 h1{font-size:15pt;text-align:center;margin:6px 0 2px}h2{font-size:13pt;margin:16px 0 6px}.c{text-align:center}.top{display:flex;justify-content:space-between;font-size:11.5pt}
 table{width:100%;border-collapse:collapse;margin:4px 0;font-size:10.5pt}th,td{border:1px solid #444;padding:3px 4px;vertical-align:top}th{background:#eee}td.n{text-align:right;white-space:nowrap}
 .ok{color:#0a6b35}.bad{color:#b00000;font-weight:bold}tr.rec td{background:#eef6ee}i{color:#555;font-size:9.5pt}.note{font-size:10.5pt;color:#333}.sign{display:flex;justify-content:flex-end;margin-top:28px}.sign div{text-align:center;width:45%}
 .wide{overflow-x:auto}@media print{body{margin:0}.wide{overflow:visible}}</style></head><body>
-<div class="top"><div><b>${unit}</b><br>NMNM Trường Xuân</div><div class="c">Ngày lập: ${now}</div></div>
+<div class="top"><div><b>${unit}</b>${unit&&plant?"<br>":""}${plant}</div><div class="c">Ngày lập: ${now}</div></div>
 <h1>BÁO CÁO KẾT QUẢ THỬ NGHIỆM TIỀN XỬ LÝ<br>(KMnO₄ – OZONE)</h1>
 <p class="c note">Tiêu chuẩn đối chiếu: QCĐP 01:2023 – PI ≤ 2,0 · Fe ≤ 0,3 · Mn ≤ 0,1 · NH₄⁺ ≤ 0,3 mg/L</p>
 <h2>1. Tóm tắt</h2>
@@ -987,14 +993,14 @@ function dl(name,text,mime){const b=new Blob([text],{type:mime}); const a=docume
 $('bRep').onclick=()=>{ $('rpFrame').srcdoc=buildReport(); $('rpView').hidden=false; document.body.style.overflow='hidden'; };
 $('rpClose').onclick=()=>{ $('rpView').hidden=true; document.body.style.overflow=''; };
 $('rpPrint').onclick=()=>{ try{ $('rpFrame').contentWindow.focus(); $('rpFrame').contentWindow.print(); }catch(e){} };
-$('bRepDl').onclick=()=>dl('baocao_thunghiem_TruongXuan_'+stamp()+'.html',buildReport(),'text/html');
+$('bRepDl').onclick=()=>dl('baocao_thunghiem_'+slug()+stamp()+'.html',buildReport(),'text/html');
 $('bCsv').onclick=()=>{
   const cols=[['d','Ngay/ca'],['t','Gio'],['src','Nguon'],['on','Dung'],['Q','Q m3/h'],['PAC','PAC g/m3'],['K','KMnO4 g/m3'],['O','O3 g/h'],['pHm','pH bu tron'],
     ['pH','pH tho'],['pHo','pH sau loc'],['Tu','Duc tho NTU'],['Tuo','Duc sau loc NTU'],['Fe','Fe tho'],['FeD','Fe hoa tan tho'],['Feo','Fe sau loc'],['Mn','Mn tho'],['MnD','Mn hoa tan tho'],['Mns','Mn sau lang'],['Mno','Mn sau loc'],
     ['PI','PI tho'],['PIo','PI sau loc'],['NH','NH4 tho'],['NHo','NH4 sau loc'],['clo','Clo du'],['col','Anh mau'],['note','Ghi chu']];
   const cell=x=>{ if(x===null||x===undefined) return ''; if(typeof x==='boolean') return x?'x':''; if(typeof x==='number') return String(x).replace('.',','); return '"'+String(x).replace(/"/g,'""')+'"'; };
   const csv='﻿'+[cols.map(c=>c[1]).join(';')].concat(labs.map(x=>cols.map(c=>cell(c[0]==='on'?x.on!==false:x[c[0]])).join(';'))).join('\r\n');
-  dl('thunghiem_TruongXuan_'+stamp()+'.csv',csv,'text/csv;charset=utf-8');
+  dl('thunghiem_'+slug()+stamp()+'.csv',csv,'text/csv;charset=utf-8');
 };
 // ===== Sao lưu / khôi phục =====
 const BK=['tx_inputs7','tx_log3','tx_labs','tx_rp'];
