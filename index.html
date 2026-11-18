@@ -229,7 +229,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub">NMNM Trường Xuân · v1.3</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub">NMNM Trường Xuân · v1.4</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -268,14 +268,23 @@ details.sub[open]>summary::before{content:'▾ '}
     <div class="hint">pH nước thô (tùy chọn): khi pH &lt; 6 (nước phèn Đồng Tháp Mười – lũ rút tháng 12–1, đầu mùa mưa tháng 4–6) Fe tồn tại nhiều ở dạng Fe²⁺, app tự nâng tỷ lệ Fe²⁺ theo mục Hệ số, trừ khi đã nhập Fe hòa tan đo được.</div>
     <div class="hint">Fe, Mn nhập là số <b>tổng</b> (máy Hanna và phiếu PTN đều báo tổng). Chỉ phần hòa tan (Fe²⁺, Mn²⁺) tiêu hao KMnO₄ / ozone; phần dạng hạt bị keo tụ – lắng loại bỏ. Nên đặt PI mục tiêu 1.5–1.8 để có biên an toàn.</div>
     <details class="more" id="dissolved">
-      <summary>Fe, Mn hòa tan (nếu có số đo)</summary>
+      <summary>Fe, Mn hòa tan: số đo hoặc tỷ lệ %</summary>
+      <div class="sect">Số đo hòa tan (nếu có)</div>
       <div class="grid">
         <div class="f"><label>Fe hòa tan</label><div class="in"><input id="FeD" type="number" step="0.01" inputmode="decimal" placeholder="trống"><span>mg/L</span></div></div>
         <div class="f"><label>Mn hòa tan</label><div class="in"><input id="MnD" type="number" step="0.001" inputmode="decimal" placeholder="trống"><span>mg/L</span></div></div>
       </div>
-      <div class="hint">Mẫu lọc giấy ngay khi lấy rồi đo lại, hoặc PTN báo Fe/Mn hòa tan. Để trống → app dùng tỷ lệ ước tính trong Thiết bị › Hệ số.</div>
+      <div class="hint">Mẫu lọc giấy ngay khi lấy rồi đo lại, hoặc PTN báo Fe/Mn hòa tan. Có số đo thì app dùng số đo, bỏ qua tỷ lệ % bên dưới.</div>
+      <div class="sect">Tỷ lệ % khi không có số đo</div>
+      <div class="grid">
+      <div class="f"><label>Fe²⁺ / Fe tổng</label><div class="in"><input id="fFe" type="number" step="5" value="10"><span>%</span></div><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
+      <div class="f"><label>Mn²⁺ / Mn tổng</label><div class="in"><input id="fMn" type="number" step="5" value="90"><span>%</span></div><div class="hint">Mn(II) oxy hóa bằng O₂ rất chậm ở pH 6–8. Đợt 22/10: ≥ 65% Mn lọt qua dây chuyền → phần lớn hòa tan.</div></div>
+      <div class="f"><label>Fe²⁺ khi pH 5–6</label><div class="in"><input id="fFe6" type="number" step="5" value="30"><span>%</span></div><div class="hint">Nước phèn: Fe²⁺/Fe tổng đo được 8–66% ở kênh pH ≈ 3 (Plain of Reeds). Giá trị ước tính, cần đo kiểm chứng.</div></div>
+      <div class="f"><label>Fe²⁺ khi pH &lt; 5</label><div class="in"><input id="fFe5" type="number" step="5" value="50"><span>%</span></div></div>
+    </div>
+      <div class="row"><button class="btn sec sm" id="resetR">Về mặc định (10 / 90 / 30 / 50 %)</button></div>
     </details>
-    <div class="spec" id="spec"></div>
+    <div class="spec" id="spec" style="cursor:pointer" title="Chạm để xem / sửa tỷ lệ"></div>
     <div class="chips"><span class="chip">QCĐP: PI ≤ 2.0</span><span class="chip">Fe ≤ 0.3</span><span class="chip">Mn ≤ 0.1</span></div>
    </div>
   </div>
@@ -338,15 +347,8 @@ details.sub[open]>summary::before{content:'▾ '}
   <div class="card">
    <details class="acc" id="calib">
     <summary>Hệ số tính toán</summary>
-    <div class="note" style="margin:-4px 0 12px">Mặc định suy từ đợt 22/10 &amp; 26/10. Bấm <b>i</b> để xem giải thích từng hệ số.</div>
+    <div class="note" style="margin:-4px 0 12px">Mặc định suy từ đợt 22/10 &amp; 26/10. Bấm <b>i</b> để xem giải thích từng hệ số. Tỷ lệ Fe²⁺/Mn²⁺ (%) chỉnh ở tab Tính liều › Fe, Mn hòa tan.</div>
     <div style="display:flex;justify-content:flex-end;margin:-6px 0 6px"><button class="ibtn" style="margin:0">i</button></div>
-    <div class="sect">Fe, Mn hòa tan</div>
-    <div class="grid">
-      <div class="f"><label>Fe²⁺ / Fe tổng</label><div class="in"><input id="fFe" type="number" step="5" value="10"><span>%</span></div><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
-      <div class="f"><label>Mn²⁺ / Mn tổng</label><div class="in"><input id="fMn" type="number" step="5" value="90"><span>%</span></div><div class="hint">Mn(II) oxy hóa bằng O₂ rất chậm ở pH 6–8. Đợt 22/10: ≥ 65% Mn lọt qua dây chuyền → phần lớn hòa tan.</div></div>
-      <div class="f"><label>Fe²⁺ khi pH 5–6</label><div class="in"><input id="fFe6" type="number" step="5" value="30"><span>%</span></div><div class="hint">Nước phèn: Fe²⁺/Fe tổng đo được 8–66% ở kênh pH ≈ 3 (Plain of Reeds). Giá trị ước tính, cần đo kiểm chứng.</div></div>
-      <div class="f"><label>Fe²⁺ khi pH &lt; 5</label><div class="in"><input id="fFe5" type="number" step="5" value="50"><span>%</span></div></div>
-    </div>
     <div class="sect">KMnO₄</div>
     <div class="grid">
       <div class="f"><label>Hữu cơ tiêu hao k</label><div class="in"><input id="k" type="number" step="0.01" value="0.15"><span>/PI</span></div><div class="hint">g/m³ KMnO₄ cho mỗi mg/L PI.</div></div>
@@ -661,7 +663,7 @@ function render(){
   let rec;
   if(r1.ok&&r1.extra<=0.3) rec=1; else if(r2.ok) rec=2; else if(r1.ok) rec=1; else rec=2;
   last={P,rs,rec};
-  $('spec').innerHTML=`Đang tính với Fe²⁺ <b>${f(P.Fe2)}</b> (${P.FeMeas?'đo':f(P.f*100,0)+'% tổng'+(P.acid&&P.f>P.fBase?' – nước phèn':'')}) · Mn²⁺ <b>${f(P.Mn2,3)}</b> (${P.MnMeas?'đo':f(P.fMn*100,0)+'% tổng'}) mg/L`;
+  $('spec').innerHTML=`Đang tính với Fe²⁺ <b>${f(P.Fe2)}</b> (${P.FeMeas?'đo':f(P.f*100,0)+'% tổng'+(P.acid&&P.f>P.fBase?' – nước phèn':'')}) · Mn²⁺ <b>${f(P.Mn2,3)}</b> (${P.MnMeas?'đo':f(P.fMn*100,0)+'% tổng'}) mg/L <span style="color:var(--brand2);font-weight:600">· sửa ›</span>`;
   $('srcnote').innerHTML=src()==='H'
     ? 'Fe: máy HI97721 (0–5 mg/L, ±0,04) – dùng tốt. <b style="color:var(--warn)">Mn: máy HI97709 chỉ phân giải 0,1 mg/L, sai số ±0,2 mg/L</b> → với Mn cỡ 0,2–0,3 mg/L nên nhập Mn theo phiếu PTN gần nhất; Mn sau lọc vẫn phải gửi PTN.'
     : 'Nhập Fe tổng, Mn tổng, PI theo phiếu PTN. Mẫu PTN có độ trễ: nếu nước thô đổi màu/độ đục rõ so với lúc lấy mẫu thì kết quả chỉ để tham khảo.';
@@ -736,6 +738,8 @@ function renderLog(){
 IN.forEach(id=>$(id).addEventListener('input',render));
 document.querySelectorAll('input[name=pos]').forEach(e=>e.addEventListener('change',render));
 document.querySelectorAll('input[name=src]').forEach(e=>e.addEventListener('change',render));
+$('resetR').onclick=()=>{['fFe','fMn','fFe6','fFe5'].forEach(k=>$(k).value=DEF[k]);render();renderLabs();};
+$('spec').onclick=()=>{$('dissolved').open=true;$('dissolved').scrollIntoView({behavior:'smooth',block:'center'});};
 $('reset').onclick=()=>{Object.keys(DEF).forEach(k=>$(k).value=DEF[k]);render();renderLabs();};
 $('save').onclick=()=>{ if(!last)return; const P=last.P, t=new Date().toLocaleString('vi-VN',{hour12:false});
   const names={1:'① Chỉ KMnO4',2:'② KMnO4+Ozone ('+P.pos+')',3:'③ Chỉ Ozone'};
