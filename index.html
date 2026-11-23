@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.14</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.15</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -869,6 +869,7 @@ if((store.get('tx_mig')||0)<113){ // v1.13: ghép đúng nước thô – nướ
   if(a||b) store.set('tx_labs',labs);
   store.set('tx_mig',113);
 }
+const N15='BẤT THƯỜNG – loại khỏi hiệu chỉnh: ghép đúng giờ (15h→16h) nhưng PI 5,1→0,7 cần ηO ≈ 180% (> 100%, không thể); lần 16h→17h cùng PAC 20 chỉ khử 62%. Nghi kết quả đo PI ra mạng thấp (mẫu còn dư chất oxy hóa?) – đo lặp, song song PTN. ';
 if((store.get('tx_mig')||0)<114){ // v1.14: Khang cập nhật lại toàn bộ số liệu 23/11 (bỏ các phiếu 23/11 cũ)
   const isTXd=labs.some(x=>x&&/22\/10/.test(x.d||'')&&x.PI==4.48&&x.PIo==1.84);
   if(isTXd){
@@ -876,11 +877,15 @@ if((store.get('tx_mig')||0)<114){ // v1.14: Khang cập nhật lại toàn bộ 
     const D='23/11/2026', mn='Mn đo bằng HI97709 (sai số ±0,2) – chỉ tham khảo.';
     labs.push({d:D,t:'09:00',t2:'10:00',src:'Hanna',Q:115,PAC:14,K:0,O:420,pH:6.52,PI:6.0,PIo:2.1,note:'Không đo Fe, Mn.',on:true});
     labs.push({d:D,t:'13:00',t2:'14:00',src:'Hanna',Q:115,PAC:14,K:5,O:400,pH:6.52,PI:5.3,Fe:1.72,Mn:0.1,PIo:1.8,Feo:0,Mno:0.1,note:mn,on:true});
-    labs.push({d:D,t:'15:00',t2:'14:00?',src:'Hanna',Q:115,PAC:20,K:2,O:400,pH:6.52,PI:5.1,Fe:1.17,Mn:0.1,PIo:0.7,Feo:0.05,Mno:0.1,note:'BẤT THƯỜNG – loại khỏi hiệu chỉnh: lần 16h cùng PAC 20 chỉ khử 62%; giờ đo nước sạch ghi 14h (trước giờ châm). '+mn,on:false});
+    labs.push({d:D,t:'15:00',t2:'16:00',src:'Hanna',Q:115,PAC:20,K:2,O:400,pH:6.52,PI:5.1,Fe:1.17,Mn:0.1,PIo:0.7,Feo:0.05,Mno:0.1,note:N15+mn,on:false});
     labs.push({d:D,t:'16:00',t2:'17:00',src:'Hanna',Q:115,PAC:20,K:1.45,O:350,pH:6.52,PI:6.0,Fe:1.98,Mn:0,PIo:2.3,Feo:0.24,Mno:0,note:'PI ra mạng vượt QCĐP; Fe ra 0,24 sát giới hạn. '+mn,on:true});
     store.set('tx_labs',labs);
   }
   store.set('tx_mig',114);
+}
+if((store.get('tx_mig')||0)<115){ // v1.15: Khang xác nhận nước thô 15h → ra mạng đo 16h
+  labs.forEach(x=>{ if(x&&/23\/11/.test(x.d||'')&&x.t==='15:00'&&x.PIo==0.7){ x.t2='16:00'; x.note=N15+'Mn đo bằng HI97709 (sai số ±0,2) – chỉ tham khảo.'; } });
+  store.set('tx_labs',labs); store.set('tx_mig',115);
 }
 const fv=(x,d=2)=>(x===null||x===undefined||x===''||!isFinite(x))?'–':f(+x,d);
 const XF={d:'xD',t:'xT',t2:'xT2',src:'xSrc',Q:'xQ',PAC:'xPAC',K:'xK',O:'xO',pHm:'xpHm',pH:'xpH',pHo:'xpHo',Tu:'xTu',Tuo:'xTuo',Fe:'xFe',Feo:'xFeo',FeD:'xFeD',Mn:'xMn',Mno:'xMno',MnD:'xMnD',Mns:'xMns',PI:'xPI',PIo:'xPIo',NH:'xNH',NHo:'xNHo',clo:'xClo',col:'xCol',note:'xN'};
@@ -1011,7 +1016,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.14';
+const VER='1.15';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
