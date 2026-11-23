@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.9</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.10</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -946,7 +946,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.9';
+const VER='1.10';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
@@ -1021,9 +1021,15 @@ $('bRes').onclick=()=>$('fRes').click();
 $('fRes').onchange=e=>{ const file=e.target.files[0]; if(!file) return; const rd=new FileReader();
   rd.onload=()=>{ try{ const o=JSON.parse(rd.result);
       if(!o||o.app!=='tinh-lieu-hoa-chat-xu-ly-huu-co'||!o.data) throw new Error('File không phải sao lưu của app này.');
+      const NM={tx_inputs7:'số nhập & hệ số',tx_log3:'nhật ký',tx_labs:'phiếu thử nghiệm',tx_rp:'thông tin báo cáo'};
+      const has=BK.filter(k=>Object.prototype.hasOwnProperty.call(o.data,k));
+      if(!has.length) throw new Error('File không có dữ liệu.');
       const lb=Array.isArray(o.data.tx_labs)?o.data.tx_labs.length:0, lg=Array.isArray(o.data.tx_log3)?o.data.tx_log3.length:0;
-      if(!confirm(`Khôi phục bản sao lưu lúc ${new Date(o.time).toLocaleString('vi-VN',{hour12:false})} (${lb} phiếu, ${lg} dòng nhật ký)?\nDữ liệu hiện có trên máy này sẽ bị thay thế.`)){ e.target.value=''; return; }
-      BK.forEach(k=>{ if(o.data[k]===null||o.data[k]===undefined) localStorage.removeItem(k); else store.set(k,o.data[k]); });
+      const parts=has.map(k=>NM[k]+(k==='tx_labs'?` (${lb} phiếu)`:k==='tx_log3'?` (${lg} dòng)`:'')).join(', ');
+      const keep=BK.filter(k=>!has.includes(k)).map(k=>NM[k]);
+      if(!confirm(`Nạp file ${o.time?'lúc '+new Date(o.time).toLocaleString('vi-VN',{hour12:false}):''}\nSẽ THAY: ${parts}.`+(keep.length?`\nGiữ nguyên: ${keep.join(', ')}.`:'')+`\nTiếp tục?`)){ e.target.value=''; return; }
+      // chỉ thay phần có trong file; phần không có thì giữ nguyên
+      has.forEach(k=>{ if(o.data[k]===null) localStorage.removeItem(k); else store.set(k,o.data[k]); });
       location.reload();
     }catch(err){ $('bakMsg').textContent='Không khôi phục được: '+err.message; e.target.value=''; } };
   rd.readAsText(file); };
