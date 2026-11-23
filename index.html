@@ -551,6 +551,16 @@ const IN=['plant','pH','fFe6','fFe5','Q','Fe','Mn','PI','PIt','V','Hmin','Qp','H
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const saved=store.get('tx_inputs7'); if(saved&&!saved.m11){saved.fFe=10;saved.k=0.15;}
+const MIG=store.get('tx_mig')||0, isTX=(store.get('tx_labs')||[]).some(x=>x&&/22\/10/.test(x.d||'')&&x.PI==4.48&&x.PIo==1.84);
+if(saved&&MIG<110){ // v1.10: hệ số hiệu chỉnh theo số liệu thực 22/10 & 23/11 (chỉ đổi ô còn để giá trị mặc định cũ)
+  const num=x=>parseFloat(String(x??'').replace(',','.'));
+  if(saved.PACr===undefined||num(saved.PACr)===30) saved.PACr='21';
+  if(saved.R0===undefined||num(saved.R0)===57) saved.R0='59';
+  if(saved.nP===undefined||num(saved.nP)===0.35) saved.nP='0.1';
+  if(saved.eO===undefined||num(saved.eO)===60) saved.eO='63';
+  if(num(saved.Hz)>0&&num(saved.Hz)<=10) saved.Hz='50';
+  if(isTX&&!String(saved.plant||'').trim()) saved.plant='NMNM Trường Xuân';
+}
 if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.src){const r=document.querySelector('input[name=src][value='+saved.src+']'); if(r) r.checked=true;}
 if(saved&&saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
 log=store.get('tx_log3')||[];
@@ -819,6 +829,17 @@ $('copy').onclick=()=>{
 // ===== Phiếu ghi & hiệu chỉnh từ xét nghiệm =====
 let labs=store.get('tx_labs');
 if(!Array.isArray(labs)) labs=[];
+if(MIG<110){
+  const tx=labs.find(x=>x&&/22\/10/.test(x.d||'')&&x.PI==4.48&&x.PIo==1.84);
+  if(tx){
+    if(!(tx.PAC>0)) tx.PAC=21;
+    if(tx.pHo==null) tx.pHo=6.69; if(tx.NHo==null) tx.NHo=0.13;
+    if(!labs.some(x=>/26\/10/.test(x.d||''))) labs.push({d:'26/10/2026 (đợt 2)',t:'',src:'PTN',Q:115,PAC:20,K:2.6,O:360,pHo:8.14,Fe:1.8,Feo:0.08,Mn:0.288,Mno:0.046,Mns:0.125,PI:4.86,PIo:null,NHo:1.28,clo:0.4,col:'Vàng',note:'Dư chất oxy hóa ~4 lần; PI ra mạng không đo.',on:true});
+    if(!labs.some(x=>/23\/11/.test(x.d||'')&&x.PAC==14.5)) labs.push({d:'23/11/2026 sáng',t:'',src:'Hanna',Q:115,PAC:14.5,K:0,O:500,pH:6.52,Fe:1.8,Mn:0.288,PI:6.0,PIo:2.1,note:'Hiện trạng khi tới trạm: không KMnO₄, ozone 100%. Fe, Mn thô tạm lấy theo các đợt trước.',on:true});
+    store.set('tx_labs',labs);
+  }
+  store.set('tx_mig',110);
+}
 const fv=(x,d=2)=>(x===null||x===undefined||x===''||!isFinite(x))?'–':f(+x,d);
 const XF={d:'xD',t:'xT',src:'xSrc',Q:'xQ',PAC:'xPAC',K:'xK',O:'xO',pHm:'xpHm',pH:'xpH',pHo:'xpHo',Tu:'xTu',Tuo:'xTuo',Fe:'xFe',Feo:'xFeo',FeD:'xFeD',Mn:'xMn',Mno:'xMno',MnD:'xMnD',Mns:'xMns',PI:'xPI',PIo:'xPIo',NH:'xNH',NHo:'xNHo',clo:'xClo',col:'xCol',note:'xN'};
 const XTXT=['d','t','src','col','note'];
