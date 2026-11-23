@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.7</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.8</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -263,15 +263,15 @@ details.sub[open]>summary::before{content:'▾ '}
       <div id="srcnote" class="hint"></div>
     </div>
     <div class="grid">
-      <div class="f key"><label>PI nước thô</label><div class="in"><input id="PI" type="number" step="0.01" value="4.86" inputmode="decimal"><span>mg/L</span></div></div>
-      <div class="f"><label>PI mục tiêu</label><div class="in"><input id="PIt" type="number" step="0.1" value="1.8" inputmode="decimal"><span>mg/L</span></div></div>
-      <div class="f key"><label>Fe tổng</label><div class="in"><input id="Fe" type="number" step="0.01" value="1.80" inputmode="decimal"><span>mg/L</span></div></div>
-      <div class="f key"><label>Mn tổng</label><div class="in"><input id="Mn" type="number" step="0.001" value="0.288" inputmode="decimal"><span>mg/L</span></div></div>
+      <div class="f key"><label>PI nước thô</label><div class="in"><input id="PI" type="text" value="4.86" inputmode="decimal"><span>mg/L</span></div></div>
+      <div class="f"><label>PI mục tiêu</label><div class="in"><input id="PIt" type="text" value="1.8" inputmode="decimal"><span>mg/L</span></div></div>
+      <div class="f key"><label>Fe tổng</label><div class="in"><input id="Fe" type="text" value="1.80" inputmode="decimal"><span>mg/L</span></div></div>
+      <div class="f key"><label>Mn tổng</label><div class="in"><input id="Mn" type="text" value="0.288" inputmode="decimal"><span>mg/L</span></div></div>
     </div>
     <div class="grid3" style="margin-top:12px">
-      <div class="f"><label>pH thô</label><div class="in"><input id="pH" type="number" step="0.1" inputmode="decimal" placeholder="–"></div></div>
-      <div class="f"><label>Q</label><div class="in"><input id="Q" type="number" step="1" value="115" inputmode="decimal"><span>m³/h</span></div></div>
-      <div class="f"><label>PAC</label><div class="in"><input id="PAC" type="number" step="1" value="30" inputmode="decimal"><span>g/m³</span></div></div>
+      <div class="f"><label>pH thô</label><div class="in"><input id="pH" type="text" inputmode="decimal" placeholder="–"></div></div>
+      <div class="f"><label>Q</label><div class="in"><input id="Q" type="text" value="115" inputmode="decimal"><span>m³/h</span></div></div>
+      <div class="f"><label>PAC</label><div class="in"><input id="PAC" type="text" value="30" inputmode="decimal"><span>g/m³</span></div></div>
     </div>
     <div class="hint">pH nước thô (tùy chọn): khi pH &lt; 6 (nước nhiễm phèn – vùng đất phèn thường gặp khi lũ rút và đầu mùa mưa) Fe tồn tại nhiều ở dạng Fe²⁺, app tự nâng tỷ lệ Fe²⁺ theo mục Hệ số, trừ khi đã nhập Fe hòa tan đo được.</div>
     <div class="hint">Fe, Mn nhập là số <b>tổng</b> (máy Hanna và phiếu PTN đều báo tổng). Chỉ phần hòa tan (Fe²⁺, Mn²⁺) tiêu hao KMnO₄ / ozone; phần dạng hạt bị keo tụ – lắng loại bỏ. Nên đặt PI mục tiêu 1.5–1.8 để có biên an toàn.</div>
@@ -279,16 +279,16 @@ details.sub[open]>summary::before{content:'▾ '}
       <summary>Fe, Mn hòa tan: số đo hoặc tỷ lệ %</summary>
       <div class="sect">Số đo hòa tan (nếu có)</div>
       <div class="grid">
-        <div class="f"><label>Fe hòa tan</label><div class="in"><input id="FeD" type="number" step="0.01" inputmode="decimal" placeholder="trống"><span>mg/L</span></div></div>
-        <div class="f"><label>Mn hòa tan</label><div class="in"><input id="MnD" type="number" step="0.001" inputmode="decimal" placeholder="trống"><span>mg/L</span></div></div>
+        <div class="f"><label>Fe hòa tan</label><div class="in"><input id="FeD" type="text" inputmode="decimal" placeholder="trống"><span>mg/L</span></div></div>
+        <div class="f"><label>Mn hòa tan</label><div class="in"><input id="MnD" type="text" inputmode="decimal" placeholder="trống"><span>mg/L</span></div></div>
       </div>
       <div class="hint">Mẫu lọc giấy ngay khi lấy rồi đo lại, hoặc PTN báo Fe/Mn hòa tan. Có số đo thì app dùng số đo, bỏ qua tỷ lệ % bên dưới.</div>
       <div class="sect">Tỷ lệ % khi không có số đo</div>
       <div class="grid">
-      <div class="f"><label>Fe²⁺ / Fe tổng</label><div class="in"><input id="fFe" type="number" step="5" value="10"><span>%</span></div><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
-      <div class="f"><label>Mn²⁺ / Mn tổng</label><div class="in"><input id="fMn" type="number" step="5" value="90"><span>%</span></div><div class="hint">Mn(II) oxy hóa bằng O₂ rất chậm ở pH 6–8 nên Mn trong nước mặt phần lớn ở dạng hòa tan.</div></div>
-      <div class="f"><label>Fe²⁺ khi pH 5–6</label><div class="in"><input id="fFe6" type="number" step="5" value="30"><span>%</span></div><div class="hint">Nước phèn: tài liệu ghi nhận Fe²⁺ chiếm khoảng 8–66% Fe tổng ở kênh pH thấp. Giá trị ước tính, cần đo kiểm chứng.</div></div>
-      <div class="f"><label>Fe²⁺ khi pH &lt; 5</label><div class="in"><input id="fFe5" type="number" step="5" value="50"><span>%</span></div></div>
+      <div class="f"><label>Fe²⁺ / Fe tổng</label><div class="in"><input id="fFe" type="text" inputmode="decimal" value="10"><span>%</span></div><div class="hint">Nước mặt đục: phần lớn Fe ở dạng hạt, không tiêu hao chất oxy hóa.</div></div>
+      <div class="f"><label>Mn²⁺ / Mn tổng</label><div class="in"><input id="fMn" type="text" inputmode="decimal" value="90"><span>%</span></div><div class="hint">Mn(II) oxy hóa bằng O₂ rất chậm ở pH 6–8 nên Mn trong nước mặt phần lớn ở dạng hòa tan.</div></div>
+      <div class="f"><label>Fe²⁺ khi pH 5–6</label><div class="in"><input id="fFe6" type="text" inputmode="decimal" value="30"><span>%</span></div><div class="hint">Nước phèn: tài liệu ghi nhận Fe²⁺ chiếm khoảng 8–66% Fe tổng ở kênh pH thấp. Giá trị ước tính, cần đo kiểm chứng.</div></div>
+      <div class="f"><label>Fe²⁺ khi pH &lt; 5</label><div class="in"><input id="fFe5" type="text" inputmode="decimal" value="50"><span>%</span></div></div>
     </div>
       <div class="row"><button class="btn sec sm" id="resetR">Về mặc định (10 / 90 / 30 / 50 %)</button></div>
     </details>
@@ -321,11 +321,11 @@ details.sub[open]>summary::before{content:'▾ '}
    <div class="card">
     <div class="ch"><h2>Bồn pha &amp; bơm KMnO₄</h2><button class="ibtn">i</button></div>
     <div class="grid">
-      <div class="f"><label>Dung tích bồn</label><div class="in"><input id="V" type="number" step="0.1" value="1" inputmode="decimal"><span>m³</span></div></div>
-      <div class="f"><label>Tối thiểu 1 bồn</label><div class="in"><input id="Hmin" type="number" step="1" value="8" inputmode="decimal"><span>giờ</span></div><div class="hint">vd 8 h = 1 ca pha 1 lần</div></div>
-      <div class="f"><label>Bơm Q max</label><div class="in"><input id="Qp" type="number" step="1" value="50" inputmode="decimal"><span>L/h</span></div></div>
-      <div class="f"><label>Bơm H max</label><div class="in"><input id="Hp" type="number" step="0.5" value="7" inputmode="decimal"><span>bar</span></div></div>
-      <div class="f"><label>Áp lực ống điểm châm</label><div class="in"><input id="Pl" type="number" step="0.1" value="2" inputmode="decimal"><span>bar</span></div><div class="hint">Đọc đồng hồ áp tại điểm châm (đầu bơm nước thô).</div></div>
+      <div class="f"><label>Dung tích bồn</label><div class="in"><input id="V" type="text" value="1" inputmode="decimal"><span>m³</span></div></div>
+      <div class="f"><label>Tối thiểu 1 bồn</label><div class="in"><input id="Hmin" type="text" value="8" inputmode="decimal"><span>giờ</span></div><div class="hint">vd 8 h = 1 ca pha 1 lần</div></div>
+      <div class="f"><label>Bơm Q max</label><div class="in"><input id="Qp" type="text" value="50" inputmode="decimal"><span>L/h</span></div></div>
+      <div class="f"><label>Bơm H max</label><div class="in"><input id="Hp" type="text" value="7" inputmode="decimal"><span>bar</span></div></div>
+      <div class="f"><label>Áp lực ống điểm châm</label><div class="in"><input id="Pl" type="text" value="2" inputmode="decimal"><span>bar</span></div><div class="hint">Đọc đồng hồ áp tại điểm châm (đầu bơm nước thô).</div></div>
       <div class="f"><label>Nồng độ pha</label><select id="Csel"><option value="auto">Tự động</option><option>0.5</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>3.5</option><option>4</option></select></div>
     </div>
     <div class="hint">App chọn nồng độ thấp nhất (bước 0.5%, tối đa 4%) sao cho bơm chạy ≤ 80% Q max và 1 bồn dùng được ≥ thời gian tối thiểu.</div>
@@ -334,9 +334,9 @@ details.sub[open]>summary::before{content:'▾ '}
    <div class="card">
     <div class="ch"><h2>Máy ozone</h2><button class="ibtn">i</button></div>
     <div class="grid">
-      <div class="f key"><label>Công suất tối đa</label><div class="in"><input id="Omax" type="number" step="10" value="500" inputmode="decimal"><span>g/h</span></div></div>
-      <div class="f"><label>Mức ổn định tối thiểu</label><div class="in"><input id="Omin" type="number" step="1" value="20" inputmode="decimal"><span>%</span></div></div>
-      <div class="f"><label>Tần số ở công suất max</label><div class="in"><input id="Hz" type="number" step="1" value="50" inputmode="decimal"><span>Hz</span></div><div class="hint">Quy đổi Hz ước tính tuyến tính, cần đối chiếu đường đặc tính máy.</div></div>
+      <div class="f key"><label>Công suất tối đa</label><div class="in"><input id="Omax" type="text" value="500" inputmode="decimal"><span>g/h</span></div></div>
+      <div class="f"><label>Mức ổn định tối thiểu</label><div class="in"><input id="Omin" type="text" value="20" inputmode="decimal"><span>%</span></div></div>
+      <div class="f"><label>Tần số ở công suất max</label><div class="in"><input id="Hz" type="text" value="50" inputmode="decimal"><span>Hz</span></div><div class="hint">Quy đổi Hz ước tính tuyến tính, cần đối chiếu đường đặc tính máy.</div></div>
     </div>
     <div class="f" style="margin-top:12px"><label>Thứ tự châm khi kết hợp (phương án ②)</label>
       <div class="seg">
@@ -350,8 +350,8 @@ details.sub[open]>summary::before{content:'▾ '}
    <div class="card">
     <div class="ch"><h2>Keo tụ</h2><button class="ibtn">i</button></div>
     <div class="grid">
-      <div class="f"><label>Liều PA (polymer)</label><div class="in"><input id="PA" type="number" step="0.05" value="0.3" inputmode="decimal"><span>g/m³</span></div><div class="hint">Chỉ ghi nhận — polymer giúp lắng bông, hầu như không khử PI.</div></div>
-      <div class="f"><label>PAC tham chiếu</label><div class="in"><input id="PACr" type="number" step="1" value="30" inputmode="decimal"><span>g/m³</span></div><div class="hint">Liều PAC của lần thử dùng để hiệu chỉnh R₀.</div></div>
+      <div class="f"><label>Liều PA (polymer)</label><div class="in"><input id="PA" type="text" value="0.3" inputmode="decimal"><span>g/m³</span></div><div class="hint">Chỉ ghi nhận — polymer giúp lắng bông, hầu như không khử PI.</div></div>
+      <div class="f"><label>PAC tham chiếu</label><div class="in"><input id="PACr" type="text" value="30" inputmode="decimal"><span>g/m³</span></div><div class="hint">Liều PAC của lần thử dùng để hiệu chỉnh R₀.</div></div>
     </div>
     <div class="hint">Liều PAC đang châm nhập ở tab Tính liều. Hiệu suất khử PI của keo tụ – lắng – lọc tính theo liều PAC (quan hệ kinh nghiệm, cần hiệu chỉnh bằng số liệu thực).</div>
    </div>
@@ -364,24 +364,24 @@ details.sub[open]>summary::before{content:'▾ '}
     <div style="display:flex;justify-content:flex-end;margin:-6px 0 6px"><button class="ibtn" style="margin:0">i</button></div>
     <div class="sect">KMnO₄</div>
     <div class="grid">
-      <div class="f"><label>Hữu cơ tiêu hao k</label><div class="in"><input id="k" type="number" step="0.01" value="0.15"><span>/PI</span></div><div class="hint">g/m³ KMnO₄ cho mỗi mg/L PI.</div></div>
-      <div class="f"><label>KMnO₄ dư an toàn</label><div class="in"><input id="res" type="number" step="0.05" value="0.20"><span>g/m³</span></div></div>
-      <div class="f"><label>Hiệu suất oxy hóa PI ηK</label><div class="in"><input id="eK" type="number" step="5" value="50"><span>%</span></div><div class="hint">So với lý thuyết: 1 g KMnO₄ ≡ 0.152 g O₂ (trung tính).</div></div>
-      <div class="f"><label>Liều KMnO₄ tối đa</label><div class="in"><input id="Kmax" type="number" step="0.1" value="5.0"><span>g/m³</span></div></div>
+      <div class="f"><label>Hữu cơ tiêu hao k</label><div class="in"><input id="k" type="text" inputmode="decimal" value="0.15"><span>/PI</span></div><div class="hint">g/m³ KMnO₄ cho mỗi mg/L PI.</div></div>
+      <div class="f"><label>KMnO₄ dư an toàn</label><div class="in"><input id="res" type="text" inputmode="decimal" value="0.20"><span>g/m³</span></div></div>
+      <div class="f"><label>Hiệu suất oxy hóa PI ηK</label><div class="in"><input id="eK" type="text" inputmode="decimal" value="50"><span>%</span></div><div class="hint">So với lý thuyết: 1 g KMnO₄ ≡ 0.152 g O₂ (trung tính).</div></div>
+      <div class="f"><label>Liều KMnO₄ tối đa</label><div class="in"><input id="Kmax" type="text" inputmode="decimal" value="5.0"><span>g/m³</span></div></div>
     </div>
     <div class="sect">Keo tụ</div>
     <div class="grid3">
-      <div class="f"><label>R₀</label><div class="in"><input id="R0" type="number" step="1" value="57"><span>%</span></div><div class="hint">Hiệu suất khử PI ở PAC tham chiếu.</div></div>
-      <div class="f"><label>Số mũ n</label><div class="in"><input id="nP" type="number" step="0.05" value="0.35"></div><div class="hint">R = R₀ × (PAC/PAC tham chiếu)ⁿ</div></div>
-      <div class="f"><label>Tối đa</label><div class="in"><input id="Rcap" type="number" step="1" value="70"><span>%</span></div></div>
+      <div class="f"><label>R₀</label><div class="in"><input id="R0" type="text" inputmode="decimal" value="57"><span>%</span></div><div class="hint">Hiệu suất khử PI ở PAC tham chiếu.</div></div>
+      <div class="f"><label>Số mũ n</label><div class="in"><input id="nP" type="text" inputmode="decimal" value="0.35"></div><div class="hint">R = R₀ × (PAC/PAC tham chiếu)ⁿ</div></div>
+      <div class="f"><label>Tối đa</label><div class="in"><input id="Rcap" type="text" inputmode="decimal" value="70"><span>%</span></div></div>
     </div>
     <div class="sect">Ozone</div>
     <div class="grid">
-      <div class="f"><label>Hiệu suất oxy hóa PI ηO</label><div class="in"><input id="eO" type="number" step="5" value="60"><span>%</span></div><div class="hint">So với lý thuyết: 1 g O₃ ≡ 0.333 g O₂.</div></div>
-      <div class="f"><label>Hữu cơ tiêu hao kₒ</label><div class="in"><input id="kO" type="number" step="0.01" value="0.05"><span>/PI</span></div><div class="hint">mg/L O₃ cho mỗi mg/L PI — chỉ dùng cho phương án ③.</div></div>
-      <div class="f"><label>Ozone dư an toàn</label><div class="in"><input id="Ores" type="number" step="0.05" value="0.10"><span>mg/L</span></div></div>
-      <div class="f"><label>Hiệu suất hòa tan</label><div class="in"><input id="TE" type="number" step="5" value="70"><span>%</span></div></div>
-      <div class="f"><label>Ngưỡng ánh hồng</label><div class="in"><input id="Opink" type="number" step="0.1" value="0.5"><span>mg/L</span></div><div class="hint">Ozone sau KMnO₄ vượt ngưỡng này → nguy cơ MnO₄⁻.</div></div>
+      <div class="f"><label>Hiệu suất oxy hóa PI ηO</label><div class="in"><input id="eO" type="text" inputmode="decimal" value="60"><span>%</span></div><div class="hint">So với lý thuyết: 1 g O₃ ≡ 0.333 g O₂.</div></div>
+      <div class="f"><label>Hữu cơ tiêu hao kₒ</label><div class="in"><input id="kO" type="text" inputmode="decimal" value="0.05"><span>/PI</span></div><div class="hint">mg/L O₃ cho mỗi mg/L PI — chỉ dùng cho phương án ③.</div></div>
+      <div class="f"><label>Ozone dư an toàn</label><div class="in"><input id="Ores" type="text" inputmode="decimal" value="0.10"><span>mg/L</span></div></div>
+      <div class="f"><label>Hiệu suất hòa tan</label><div class="in"><input id="TE" type="text" inputmode="decimal" value="70"><span>%</span></div></div>
+      <div class="f"><label>Ngưỡng ánh hồng</label><div class="in"><input id="Opink" type="text" inputmode="decimal" value="0.5"><span>mg/L</span></div><div class="hint">Ozone sau KMnO₄ vượt ngưỡng này → nguy cơ MnO₄⁻.</div></div>
     </div>
     <div class="row"><button class="btn sec sm" id="reset">Khôi phục mặc định</button><span class="note">Tự hiệu chỉnh từ xét nghiệm: tab <b>Thử nghiệm</b>.</span></div>
    </details>
@@ -403,31 +403,31 @@ details.sub[open]>summary::before{content:'▾ '}
     </div>
     <div class="sect" style="margin-top:16px">Liều đang chạy lúc lấy mẫu</div>
     <div class="grid">
-      <div class="f"><label>Lưu lượng Q</label><div class="in"><input id="xQ" type="number" step="1" inputmode="decimal" placeholder=115><span>m³/h</span></div></div>
-      <div class="f"><label>PAC</label><div class="in"><input id="xPAC" type="number" step="1" inputmode="decimal"><span>g/m³</span></div></div>
-      <div class="f"><label>KMnO₄</label><div class="in"><input id="xK" type="number" step="0.1" inputmode="decimal" placeholder=0><span>g/m³</span></div></div>
-      <div class="f"><label>Ozone</label><div class="in"><input id="xO" type="number" step="10" inputmode="decimal" placeholder=0><span>g/h</span></div></div>
-      <div class="f"><label>pH bu trộn</label><div class="in"><input id="xpHm" type="number" step="0.01" inputmode="decimal"></div></div>
+      <div class="f"><label>Lưu lượng Q</label><div class="in"><input id="xQ" type="text" inputmode="decimal" placeholder=115><span>m³/h</span></div></div>
+      <div class="f"><label>PAC</label><div class="in"><input id="xPAC" type="text" inputmode="decimal"><span>g/m³</span></div></div>
+      <div class="f"><label>KMnO₄</label><div class="in"><input id="xK" type="text" inputmode="decimal" placeholder=0><span>g/m³</span></div></div>
+      <div class="f"><label>Ozone</label><div class="in"><input id="xO" type="text" inputmode="decimal" placeholder=0><span>g/h</span></div></div>
+      <div class="f"><label>pH bu trộn</label><div class="in"><input id="xpHm" type="text" inputmode="decimal"></div></div>
       <div class="f"><label>&nbsp;</label><button class="btn sec full" id="xFill" type="button">Lấy số từ app</button></div>
     </div>
     <div class="hint">"Lấy số từ app": Q, PAC, pH thô từ tab Tính liều; KMnO₄ và ozone từ thẻ "Kiểm tra liều đang chạy".</div>
     <div class="sect" style="margin-top:16px">Kết quả <span style="text-transform:none;font-weight:500">(mg/L, trừ pH và độ đục)</span></div>
       <div class="lab">
         <span></span><span class="h">Nước thô</span><span class="h">Sau lọc / ra mạng</span>
-        <span class="r">pH</span><div class="in"><input id="xpH" type="number" step="0.01" inputmode="decimal"></div><div class="in"><input id="xpHo" type="number" step="0.01" inputmode="decimal"></div>
-        <span class="r">Độ đục <small class="note">NTU</small></span><div class="in"><input id="xTu" type="number" step="0.1" inputmode="decimal"></div><div class="in"><input id="xTuo" type="number" step="0.1" inputmode="decimal"></div>
-        <span class="r">Fe tổng</span><div class="in"><input id="xFe" type="number" step="0.01" inputmode="decimal"></div><div class="in"><input id="xFeo" type="number" step="0.01" inputmode="decimal"></div>
-        <span class="r">Fe hòa tan <small class="note">lọc tại chỗ</small></span><div class="in"><input id="xFeD" type="number" step="0.01" inputmode="decimal"></div><span></span>
-        <span class="r">Mn tổng</span><div class="in"><input id="xMn" type="number" step="0.001" inputmode="decimal"></div><div class="in"><input id="xMno" type="number" step="0.001" inputmode="decimal"></div>
-        <span class="r">Mn hòa tan <small class="note">PTN, lọc 0,45 µm</small></span><div class="in"><input id="xMnD" type="number" step="0.001" inputmode="decimal"></div><span></span>
-        <span class="r">PI</span><div class="in"><input id="xPI" type="number" step="0.01" inputmode="decimal"></div><div class="in"><input id="xPIo" type="number" step="0.01" inputmode="decimal"></div>
-        <span class="r">NH₄⁺</span><div class="in"><input id="xNH" type="number" step="0.01" inputmode="decimal"></div><div class="in"><input id="xNHo" type="number" step="0.01" inputmode="decimal"></div>
+        <span class="r">pH</span><div class="in"><input id="xpH" type="text" inputmode="decimal"></div><div class="in"><input id="xpHo" type="text" inputmode="decimal"></div>
+        <span class="r">Độ đục <small class="note">NTU</small></span><div class="in"><input id="xTu" type="text" inputmode="decimal"></div><div class="in"><input id="xTuo" type="text" inputmode="decimal"></div>
+        <span class="r">Fe tổng</span><div class="in"><input id="xFe" type="text" inputmode="decimal"></div><div class="in"><input id="xFeo" type="text" inputmode="decimal"></div>
+        <span class="r">Fe hòa tan <small class="note">lọc tại chỗ</small></span><div class="in"><input id="xFeD" type="text" inputmode="decimal"></div><span></span>
+        <span class="r">Mn tổng</span><div class="in"><input id="xMn" type="text" inputmode="decimal"></div><div class="in"><input id="xMno" type="text" inputmode="decimal"></div>
+        <span class="r">Mn hòa tan <small class="note">PTN, lọc 0,45 µm</small></span><div class="in"><input id="xMnD" type="text" inputmode="decimal"></div><span></span>
+        <span class="r">PI</span><div class="in"><input id="xPI" type="text" inputmode="decimal"></div><div class="in"><input id="xPIo" type="text" inputmode="decimal"></div>
+        <span class="r">NH₄⁺</span><div class="in"><input id="xNH" type="text" inputmode="decimal"></div><div class="in"><input id="xNHo" type="text" inputmode="decimal"></div>
       </div>
     <div class="hint">Fe hòa tan: lọc mẫu nước thô bằng giấy lọc ngay khi lấy rồi đo bằng HI97721. Mn hòa tan: nhờ PTN lọc 0,45 µm. App dùng 2 số này để đề xuất tỷ lệ Fe²⁺, Mn²⁺.</div>
     <div class="sect" style="margin-top:16px">Quan sát</div>
     <div class="grid">
-      <div class="f"><label>Mn sau lắng</label><div class="in"><input id="xMns" type="number" step="0.001" inputmode="decimal"><span>mg/L</span></div></div>
-      <div class="f"><label>Clo dư (DPD)</label><div class="in"><input id="xClo" type="number" step="0.01" inputmode="decimal"><span>mg/L</span></div></div>
+      <div class="f"><label>Mn sau lắng</label><div class="in"><input id="xMns" type="text" inputmode="decimal"><span>mg/L</span></div></div>
+      <div class="f"><label>Clo dư (DPD)</label><div class="in"><input id="xClo" type="text" inputmode="decimal"><span>mg/L</span></div></div>
       <div class="f"><label>Ánh màu bể lắng</label><select id="xCol"><option value="">Không</option><option>Hồng nhạt</option><option>Hồng</option><option>Vàng</option></select></div>
       <div class="f"><label>Ghi chú</label><input id="xN" type="text" placeholder="thời tiết, sự cố…"></div>
     </div>
@@ -446,8 +446,8 @@ details.sub[open]>summary::before{content:'▾ '}
     <div class="ch"><h2>Kiểm tra liều đang chạy</h2><button class="ibtn">i</button></div>
     <div class="hint" style="margin:-4px 0 12px">Nhập liều KMnO₄ và ozone ca trực đang cài đặt. App so tổng chất oxy hóa đang cấp với nhu cầu của nước thô (tab Tính liều) để biết dư hay thiếu. Tỷ lệ cấp / nhu cầu lớn hơn 1,5 lần thường gây ánh vàng / hồng và Mn sau lắng tăng.</div>
     <div class="grid">
-      <div class="f"><label>KMnO₄ đang châm</label><div class="in"><input id="rK" type="number" step="0.1" value="2.6" inputmode="decimal"><span>g/m³</span></div></div>
-      <div class="f"><label>Ozone đang chạy</label><div class="in"><input id="rO" type="number" step="10" value="360" inputmode="decimal"><span>g/h</span></div></div>
+      <div class="f"><label>KMnO₄ đang châm</label><div class="in"><input id="rK" type="text" value="2.6" inputmode="decimal"><span>g/m³</span></div></div>
+      <div class="f"><label>Ozone đang chạy</label><div class="in"><input id="rO" type="text" value="360" inputmode="decimal"><span>g/h</span></div></div>
     </div>
     <div id="runout"></div>
   </div>
@@ -942,7 +942,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.7';
+const VER='1.8';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});

@@ -1,5 +1,5 @@
 // Service worker: cho app mở được khi mất mạng. Đổi VERSION mỗi lần cập nhật app.
-const VERSION = 'tinhlieu-v1.7';
+const VERSION = 'tinhlieu-v1.8';
 const FILES = ['./', './index.html', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES.map(f => new Request(f, {cache: 'reload'})))).then(() => self.skipWaiting()));
