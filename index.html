@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.10</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.11</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -366,7 +366,7 @@ details.sub[open]>summary::before{content:'▾ '}
     <div class="grid">
       <div class="f"><label>Hữu cơ tiêu hao k</label><div class="in"><input id="k" type="text" inputmode="decimal" value="0.15"><span>/PI</span></div><div class="hint">g/m³ KMnO₄ cho mỗi mg/L PI.</div></div>
       <div class="f"><label>KMnO₄ dư an toàn</label><div class="in"><input id="res" type="text" inputmode="decimal" value="0.20"><span>g/m³</span></div></div>
-      <div class="f"><label>Hiệu suất oxy hóa PI ηK</label><div class="in"><input id="eK" type="text" inputmode="decimal" value="50"><span>%</span></div><div class="hint">So với lý thuyết: 1 g KMnO₄ ≡ 0.152 g O₂ (trung tính).</div></div>
+      <div class="f"><label>Hiệu suất oxy hóa PI ηK</label><div class="in"><input id="eK" type="text" inputmode="decimal" value="0"><span>%</span></div><div class="hint">So với lý thuyết: 1 g KMnO₄ ≡ 0.152 g O₂ (trung tính). Thử nghiệm thực tế: nâng KMnO₄ lên 5 g/m³ không hạ thêm PI → đặt 0% (KMnO₄ chỉ dùng cho Fe, Mn).</div></div>
       <div class="f"><label>Liều KMnO₄ tối đa</label><div class="in"><input id="Kmax" type="text" inputmode="decimal" value="5.0"><span>g/m³</span></div></div>
     </div>
     <div class="sect">Keo tụ</div>
@@ -377,7 +377,7 @@ details.sub[open]>summary::before{content:'▾ '}
     </div>
     <div class="sect">Ozone</div>
     <div class="grid">
-      <div class="f"><label>Hiệu suất oxy hóa PI ηO</label><div class="in"><input id="eO" type="text" inputmode="decimal" value="63"><span>%</span></div><div class="hint">So với lý thuyết: 1 g O₃ ≡ 0.333 g O₂.</div></div>
+      <div class="f"><label>Hiệu suất oxy hóa PI ηO</label><div class="in"><input id="eO" type="text" inputmode="decimal" value="61"><span>%</span></div><div class="hint">So với lý thuyết: 1 g O₃ ≡ 0.333 g O₂.</div></div>
       <div class="f"><label>Hữu cơ tiêu hao kₒ</label><div class="in"><input id="kO" type="text" inputmode="decimal" value="0.05"><span>/PI</span></div><div class="hint">mg/L O₃ cho mỗi mg/L PI — chỉ dùng cho phương án ③.</div></div>
       <div class="f"><label>Ozone dư an toàn</label><div class="in"><input id="Ores" type="text" inputmode="decimal" value="0.10"><span>mg/L</span></div></div>
       <div class="f"><label>Hiệu suất hòa tan</label><div class="in"><input id="TE" type="text" inputmode="decimal" value="70"><span>%</span></div></div>
@@ -504,7 +504,7 @@ details.sub[open]>summary::before{content:'▾ '}
  2Fe²⁺ + O₃ → 2Fe³⁺            : 0.43 g O₃ / g Fe²⁺
  Mn²⁺ + O₃ → MnO₂              : 0.87 g O₃ / g Mn²⁺
  Hữu cơ (PI, mg O₂/L):
-  KMnO₄ trung tính (nhận 3e⁻): 1 g ≡ 0.152 g O₂
+  KMnO₄ trung tính (nhận 3e⁻): 1 g ≡ 0.152 g O₂ (thực tế ηK ≈ 0: KMnO₄ không hạ PI)
   O₃ (nhận 2e⁻):               1 g ≡ 0.333 g O₂
   → PI giảm = lý thuyết × hiệu suất η (ηK, ηO)
 
@@ -546,7 +546,7 @@ KMnO₄ 1 bồn (kg) = dung tích (m³) × nồng độ % × 10
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const DEF={fFe:10,fFe6:30,fFe5:50,fMn:90,k:0.15,res:0.20,R0:59,nP:0.1,Rcap:70,eK:50,Kmax:5.0,eO:63,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
+const DEF={fFe:10,fFe6:30,fFe5:50,fMn:90,k:0.15,res:0.20,R0:59,nP:0.1,Rcap:70,eK:0,Kmax:5.0,eO:61,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
 const IN=['plant','pH','fFe6','fFe5','Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -561,6 +561,9 @@ if(saved&&MIG<110){ // v1.10: hệ số hiệu chỉnh theo số liệu thực 2
   if(num(saved.Hz)>0&&num(saved.Hz)<=10) saved.Hz='50';
   if(isTX&&!String(saved.plant||'').trim()) saved.plant='NMNM Trường Xuân';
 }
+if(saved&&MIG<111){ const num=x=>parseFloat(String(x??'').replace(',','.'));
+  if(saved.eK===undefined||num(saved.eK)===50) saved.eK='0';
+  if(saved.eO===undefined||num(saved.eO)===63||num(saved.eO)===60) saved.eO='61'; }
 if(saved){IN.forEach(id=>{if(saved[id]!==undefined&&$(id))$(id).value=saved[id]}); if(saved.src){const r=document.querySelector('input[name=src][value='+saved.src+']'); if(r) r.checked=true;}
 if(saved&&saved.pos){const r=document.querySelector('input[name=pos][value='+saved.pos+']'); if(r) r.checked=true;}}
 log=store.get('tx_log3')||[];
@@ -644,7 +647,9 @@ function pacNeed(maxRed,P){
   if(!(P.PACr>0)||!(P.R0>0)) return null;
   if(Rn<=P.Rc) return null;
   if(Rn>P.Rcap) return {over:true,Rn};
-  return {over:false,Rn,pac:P.PACr*Math.pow(Rn/P.R0,1/P.nP)};
+  const pac=P.PACr*Math.pow(Rn/P.R0,1/P.nP);
+  if(pac>40||(P.PAC>0&&pac>2*P.PAC)) return {over:true,Rn,pac};
+  return {over:false,Rn,pac};
 }
 
 // ===== Hiển thị =====
@@ -684,9 +689,10 @@ function planBody(r,P){
   // Cảnh báo
   const m=[];
   const pn=r.ok?null:pacNeed(r.maxRed,P);
-  const pacMsg=pn?(pn.over?` Tăng PAC cũng khó đạt (cần keo tụ ${f(pn.Rn*100,0)}% &gt; ${f(P.Rcap*100,0)}%) → cân nhắc than hoạt tính hoặc nâng PI mục tiêu.`:` Cần tăng PAC lên ≈ <b>${f(pn.pac,0)} g/m³</b> (xác nhận bằng jar-test).`):'';
+  const pacMsg=pn?(pn.over?` Tăng PAC không giải quyết được (cần keo tụ khử ${f(pn.Rn*100,0)}% PI${pn.pac?', ≈ '+f(pn.pac,0)+' g/m³ PAC':''}) → cân nhắc keo tụ ở pH thấp hơn, than hoạt tính bột hoặc nâng PI mục tiêu.`:` Cần tăng PAC lên ≈ <b>${f(pn.pac,0)} g/m³</b> (xác nhận bằng jar-test).`):'';
   if(r.id===1){
     if(P.dPI<=0) m.push(['ok','PI đạt nhờ keo tụ – lọc; KMnO₄ chỉ cần cho Fe, Mn và hữu cơ tiêu hao.']);
+    else if(!(P.sK>0)) m.push(['bad',`KMnO₄ không hạ được PI (hiệu suất ηK = 0%) → PI còn ${f(r.PIo)} sau keo tụ. Cần ozone (phương án ②) hoặc tăng hiệu quả keo tụ.${pacMsg}`]);
     else if(!r.capped) m.push(['info',`Thêm ${f(r.extra)} g/m³ KMnO₄ để oxy hóa ${f(P.dPI)} mg/L PI còn lại (1 g/m³ hạ ≈ ${f(P.sK,3)} mg/L PI).`]);
     else m.push(['bad',`Đã tới liều tối đa ${f(P.Kmax,1)} g/m³ — KMnO₄ oxy hóa hữu cơ yếu nên PI chưa đạt.${pacMsg}`]);
     if(r.K.tot>2.5) m.push(['warn','Liều &gt; 2.5 g/m³: theo dõi ánh hồng/vàng ở bể lắng.']);
@@ -694,7 +700,7 @@ function planBody(r,P){
   if(r.id===2){
     if(P.dPI<=0) m.push(['ok','PI đạt nhờ keo tụ – lọc → không cần ozone (có thể dùng ①).']);
     else if(r.capped&&r.ok) m.push(['warn',`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) → nâng thêm ${f(r.extra)} g/m³ KMnO₄ để oxy hóa phần PI còn lại (1 g/m³ hạ ≈ ${f(P.sK,3)} mg/L PI). Kiểm tra màu bể lắng và Mn sau lọc.`]);
-    else if(r.capped) m.push(['bad',`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) và KMnO₄ đã tới liều tối đa ${f(P.Kmax,1)} g/m³ mà PI chưa đạt — KMnO₄ oxy hóa hữu cơ yếu.${pacMsg}`]);
+    else if(r.capped) m.push(['bad',(P.sK>0?`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) và KMnO₄ đã tới liều tối đa ${f(P.Kmax,1)} g/m³ mà PI chưa đạt — KMnO₄ oxy hóa hữu cơ yếu.`:`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) mà PI chưa đạt. Tăng KMnO₄ không giúp hạ PI (đã kiểm chứng 23/11).`)+pacMsg]);
     if(r.K.tot>2.5) m.push(['warn','KMnO₄ &gt; 2.5 g/m³: theo dõi ánh hồng ở bể lắng và Mn sau lọc.']);
     if(P.pos==='A'&&r.O.tot>P.Opink) m.push(['warn',`Ozone sau KMnO₄ ${f(r.O.tot)} mg/L &gt; ${f(P.Opink,1)} → nguy cơ Mn ngược thành MnO₄⁻ (ánh hồng).`]);
     if(P.pos==='B'&&r.O.tot>0) m.push(['info','Ozone đi trước oxy hóa một phần Fe²⁺ → có thể giảm KMnO₄ phần Fe khi phép thử cốc xác nhận.']);
@@ -752,7 +758,7 @@ function render(){
   if(rec===1&&r1.ok&&!(r1.extra>0.3)) ex='Đủ với chỉ KMnO₄ — có thể tắt ozone.';
   else if(rec===2&&r1.ok) ex=`① chỉ KMnO₄ cũng đạt nhưng cần ${f(r1.K.tot)} g/m³ — tốn hơn và dễ ánh màu.`;
   if(allBad){ const pn=pacNeed(r2.maxRed,P);
-    ex=`Với PAC ${f(P.PAC,0)} g/m³ cả 3 phương án chưa đạt PI ${f(P.PIt,1)} (tốt nhất ② ozone 100%).`+(pn?(pn.over?' Tăng PAC cũng khó đạt → cân nhắc than hoạt tính hoặc nâng PI mục tiêu.':` Tăng PAC lên ≈ <b>${f(pn.pac,0)} g/m³</b> rồi chạy ②.`):''); }
+    ex=`Với PAC ${f(P.PAC,0)} g/m³ cả 3 phương án chưa đạt PI ${f(P.PIt,1)} (tốt nhất ② ozone 100%).`+(pn?(pn.over?' Tăng PAC không giải quyết được → cân nhắc keo tụ ở pH thấp hơn, than hoạt tính bột hoặc nâng PI mục tiêu.':` Tăng PAC lên ≈ <b>${f(pn.pac,0)} g/m³</b> rồi chạy ②.`):''); }
   let a=`<div class="hero ${allBad?'bad':(rec===1?'':'info')}"><div class="lb">${allBad?'Chưa đạt mục tiêu':'Đề xuất vận hành'}</div><div class="tt">${NUM[rec]} ${NAME[rec]}</div><div class="vals num">${vals}</div>${ex?`<div class="ex">${ex}</div>`:''}</div>`;
   const pre=[];
   if(!(P.Omax>0)) pre.push(['bad','Nhập công suất tối đa máy ozone (tab Thiết bị) để tính phương án ② và ③.']);
@@ -839,6 +845,11 @@ if(MIG<110){
     store.set('tx_labs',labs);
   }
   store.set('tx_mig',110);
+}
+if((store.get('tx_mig')||0)<111){ // v1.11: số liệu 23/11 13h – KMnO₄ 5 g/m³ không hạ thêm PI → ηK 0, ηO 61
+  const tx=labs.find(x=>x&&/22\/10/.test(x.d||'')&&x.PI==4.48&&x.PIo==1.84);
+  if(tx&&!labs.some(x=>/23\/11/.test(x.d||'')&&x.PAC==14.7)) labs.push({d:'23/11/2026',t:'13:00',src:'Hanna',Q:115,PAC:14.7,K:5,O:400,Fe:1.72,Feo:0,Mn:0.1,Mno:0.1,PI:5.3,PIo:1.8,note:'KMnO₄ 5 g/m³ + ozone 400 g/h. Mn đo bằng HI97709 (sai số ±0,2) – chỉ tham khảo, cần PTN.',on:true});
+  store.set('tx_labs',labs); store.set('tx_mig',111);
 }
 const fv=(x,d=2)=>(x===null||x===undefined||x===''||!isFinite(x))?'–':f(+x,d);
 const XF={d:'xD',t:'xT',src:'xSrc',Q:'xQ',PAC:'xPAC',K:'xK',O:'xO',pHm:'xpHm',pH:'xpH',pHo:'xpHo',Tu:'xTu',Tuo:'xTuo',Fe:'xFe',Feo:'xFeo',FeD:'xFeD',Mn:'xMn',Mno:'xMno',MnD:'xMnD',Mns:'xMns',PI:'xPI',PIo:'xPIo',NH:'xNH',NHo:'xNHo',clo:'xClo',col:'xCol',note:'xN'};
@@ -967,7 +978,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.10';
+const VER='1.11';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
