@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.6</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.7</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -614,8 +614,10 @@ function plan2(P){
   const Fe=0.94*P.Fe2, Mn=1.92*P.Mn2, comp=(P.pos==='B'?0.5:1)*P.k*P.PI, K=Fe+Mn+comp+P.res;
   let Opi=P.sO>0?P.dPI/P.sO:0, capped=false;
   if(Opi>P.Odmax){Opi=P.Odmax;capped=true;}
-  const PIo=P.PIc-P.sO*Opi;
-  return {id:2,K:{Fe,Mn,PI:0,comp,res:P.res,tot:K},O:{Fe:0,Mn:0,PI:Opi,res:0,tot:Opi},PIo,ok:okPI(PIo,P),capped,maxRed:P.sO*P.Odmax};
+  let PIo=P.PIc-P.sO*Opi, extra=0, kcap=false;
+  // ozone đã chạy hết công suất mà PI chưa đạt → nâng KMnO4 cho phần PI còn lại (tới liều tối đa)
+  if(PIo>P.PIt+1e-9&&P.sK>0){ extra=(PIo-P.PIt)/P.sK; const room=Math.max(0,P.Kmax-K); if(extra>room){extra=room;kcap=true;} PIo-=P.sK*extra; }
+  return {id:2,K:{Fe,Mn,PI:extra,comp,res:P.res,tot:K+extra},O:{Fe:0,Mn:0,PI:Opi,res:0,tot:Opi},PIo,ok:okPI(PIo,P),capped,extra,kcap,maxRed:P.sO*P.Odmax+P.sK*Math.max(0,P.Kmax-K)};
 }
 // ③ chỉ ozone
 function plan3(P){
@@ -681,7 +683,9 @@ function planBody(r,P){
   }
   if(r.id===2){
     if(P.dPI<=0) m.push(['ok','PI đạt nhờ keo tụ – lọc → không cần ozone (có thể dùng ①).']);
-    else if(r.capped) m.push(['bad',`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) mà PI chưa đạt.${pacMsg}`]);
+    else if(r.capped&&r.ok) m.push(['warn',`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) → nâng thêm ${f(r.extra)} g/m³ KMnO₄ để oxy hóa phần PI còn lại (1 g/m³ hạ ≈ ${f(P.sK,3)} mg/L PI). Kiểm tra màu bể lắng và Mn sau lọc.`]);
+    else if(r.capped) m.push(['bad',`Ozone đã chạy 100% (${f(P.Omax,0)} g/h) và KMnO₄ đã tới liều tối đa ${f(P.Kmax,1)} g/m³ mà PI chưa đạt — KMnO₄ oxy hóa hữu cơ yếu.${pacMsg}`]);
+    if(r.K.tot>2.5) m.push(['warn','KMnO₄ &gt; 2.5 g/m³: theo dõi ánh hồng ở bể lắng và Mn sau lọc.']);
     if(P.pos==='A'&&r.O.tot>P.Opink) m.push(['warn',`Ozone sau KMnO₄ ${f(r.O.tot)} mg/L &gt; ${f(P.Opink,1)} → nguy cơ Mn ngược thành MnO₄⁻ (ánh hồng).`]);
     if(P.pos==='B'&&r.O.tot>0) m.push(['info','Ozone đi trước oxy hóa một phần Fe²⁺ → có thể giảm KMnO₄ phần Fe khi phép thử cốc xác nhận.']);
   }
@@ -938,7 +942,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.6';
+const VER='1.7';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
