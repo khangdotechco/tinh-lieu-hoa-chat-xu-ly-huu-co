@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.8</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.9</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -351,7 +351,7 @@ details.sub[open]>summary::before{content:'▾ '}
     <div class="ch"><h2>Keo tụ</h2><button class="ibtn">i</button></div>
     <div class="grid">
       <div class="f"><label>Liều PA (polymer)</label><div class="in"><input id="PA" type="text" value="0.3" inputmode="decimal"><span>g/m³</span></div><div class="hint">Chỉ ghi nhận — polymer giúp lắng bông, hầu như không khử PI.</div></div>
-      <div class="f"><label>PAC tham chiếu</label><div class="in"><input id="PACr" type="text" value="30" inputmode="decimal"><span>g/m³</span></div><div class="hint">Liều PAC của lần thử dùng để hiệu chỉnh R₀.</div></div>
+      <div class="f"><label>PAC tham chiếu</label><div class="in"><input id="PACr" type="text" value="21" inputmode="decimal"><span>g/m³</span></div><div class="hint">Liều PAC của lần thử dùng để hiệu chỉnh R₀.</div></div>
     </div>
     <div class="hint">Liều PAC đang châm nhập ở tab Tính liều. Hiệu suất khử PI của keo tụ – lắng – lọc tính theo liều PAC (quan hệ kinh nghiệm, cần hiệu chỉnh bằng số liệu thực).</div>
    </div>
@@ -371,13 +371,13 @@ details.sub[open]>summary::before{content:'▾ '}
     </div>
     <div class="sect">Keo tụ</div>
     <div class="grid3">
-      <div class="f"><label>R₀</label><div class="in"><input id="R0" type="text" inputmode="decimal" value="57"><span>%</span></div><div class="hint">Hiệu suất khử PI ở PAC tham chiếu.</div></div>
-      <div class="f"><label>Số mũ n</label><div class="in"><input id="nP" type="text" inputmode="decimal" value="0.35"></div><div class="hint">R = R₀ × (PAC/PAC tham chiếu)ⁿ</div></div>
+      <div class="f"><label>R₀</label><div class="in"><input id="R0" type="text" inputmode="decimal" value="59"><span>%</span></div><div class="hint">Hiệu suất khử PI ở PAC tham chiếu.</div></div>
+      <div class="f"><label>Số mũ n</label><div class="in"><input id="nP" type="text" inputmode="decimal" value="0.1"></div><div class="hint">R = R₀ × (PAC/PAC tham chiếu)ⁿ. n nhỏ (≈ 0,1) = tăng PAC ít cải thiện khử PI; n lớn (≈ 0,35) = PAC ảnh hưởng mạnh. Xác định bằng 2 lần thử khác liều PAC.</div></div>
       <div class="f"><label>Tối đa</label><div class="in"><input id="Rcap" type="text" inputmode="decimal" value="70"><span>%</span></div></div>
     </div>
     <div class="sect">Ozone</div>
     <div class="grid">
-      <div class="f"><label>Hiệu suất oxy hóa PI ηO</label><div class="in"><input id="eO" type="text" inputmode="decimal" value="60"><span>%</span></div><div class="hint">So với lý thuyết: 1 g O₃ ≡ 0.333 g O₂.</div></div>
+      <div class="f"><label>Hiệu suất oxy hóa PI ηO</label><div class="in"><input id="eO" type="text" inputmode="decimal" value="63"><span>%</span></div><div class="hint">So với lý thuyết: 1 g O₃ ≡ 0.333 g O₂.</div></div>
       <div class="f"><label>Hữu cơ tiêu hao kₒ</label><div class="in"><input id="kO" type="text" inputmode="decimal" value="0.05"><span>/PI</span></div><div class="hint">mg/L O₃ cho mỗi mg/L PI — chỉ dùng cho phương án ③.</div></div>
       <div class="f"><label>Ozone dư an toàn</label><div class="in"><input id="Ores" type="text" inputmode="decimal" value="0.10"><span>mg/L</span></div></div>
       <div class="f"><label>Hiệu suất hòa tan</label><div class="in"><input id="TE" type="text" inputmode="decimal" value="70"><span>%</span></div></div>
@@ -546,7 +546,7 @@ KMnO₄ 1 bồn (kg) = dung tích (m³) × nồng độ % × 10
 <script>
 (function(){
 const $=id=>document.getElementById(id);
-const DEF={fFe:10,fFe6:30,fFe5:50,fMn:90,k:0.15,res:0.20,R0:57,nP:0.35,Rcap:70,eK:50,Kmax:5.0,eO:60,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
+const DEF={fFe:10,fFe6:30,fFe5:50,fMn:90,k:0.15,res:0.20,R0:59,nP:0.1,Rcap:70,eK:50,Kmax:5.0,eO:63,kO:0.05,Ores:0.10,TE:70,Opink:0.5};
 const IN=['plant','pH','fFe6','fFe5','Q','Fe','Mn','PI','PIt','V','Hmin','Qp','Hp','Pl','Csel','Hz','Omax','Omin','PAC','PA','PACr','FeD','MnD','fFe','fMn','k','res','R0','nP','Rcap','eK','Kmax','eO','kO','Ores','TE','Opink','rK','rO'];
 let log=[];
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -863,7 +863,11 @@ function analyze(){
       const pacF=(x.PAC>0&&P.PACr>0)?Math.pow(x.PAC/P.PACr,P.nP):1;
       const Rc=Math.min(P.Rcap,R0use*pacF), PIc=x.PI*(1-Rc);
       const Od=x.O*P.TE/x.Q, d=PIc-x.PIo;
-      if(Od>0){ const e=d/(0.333*Od); r.eO=e; if(e>0){eOs.push(e); r.notes.push('Ozone hạ '+f(d)+' mg/L PI → ηO ≈ '+f(e*100,0)+'%');} else r.notes.push('PI sau lọc ≥ dự kiến keo tụ → chưa thấy tác dụng ozone'); }
+      // phần ozone bị Fe²⁺, Mn²⁺, hữu cơ tiêu hao (khi KMnO₄ không đủ / không châm) → không dùng cho PI
+      const Fe2r=x.FeD>0&&x.Fe>0?Math.min(x.FeD,x.Fe):(x.Fe||0)*fracFe(x.pH,P), Mn2r=x.MnD>0&&x.Mn>0?Math.min(x.MnD,x.Mn):(x.Mn||0)*P.fMn;
+      const dK=0.94*Fe2r+1.92*Mn2r, cov=dK>0?Math.min(1,(x.K||0)/dK):1;
+      const basicO=(1-cov)*(0.43*Fe2r+0.87*Mn2r)+((x.K||0)>0?0:P.kO*x.PI)+P.Ores, avail=Math.max(0.05,Od-basicO);
+      if(Od>0){ const e=d/(0.333*avail); r.eO=e; if(e>0){eOs.push(e); r.notes.push('Ozone hạ '+f(d)+' mg/L PI → ηO ≈ '+f(e*100,0)+'%');} else r.notes.push('PI sau lọc ≥ dự kiến keo tụ → chưa thấy tác dụng ozone'); }
     }
     if(x.Feo>0.3) r.notes.push('<span style="color:var(--bad)">Fe ra mạng vượt chuẩn</span>');
     if(x.Mno>0.1) r.notes.push('<span style="color:var(--bad)">Mn ra mạng vượt chuẩn</span>');
@@ -942,7 +946,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.8';
+const VER='1.9';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
