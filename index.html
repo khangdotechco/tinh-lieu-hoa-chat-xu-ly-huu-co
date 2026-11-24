@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.16</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.17</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -901,6 +901,10 @@ if((store.get('tx_mig')||0)<116){ // v1.16: kết quả PTN 24/11 cho các phi�
     x.note=nn[x.t]; });
   store.set('tx_labs',labs); store.set('tx_mig',116);
 }
+if((store.get('tx_mig')||0)<117){ // v1.17: Khang xác nhận Fe thô 13h ngày 23/11 = 0,05 (PTN)
+  labs.forEach(x=>{ if(x&&/23\/11/.test(x.d||'')&&x.t==='13:00'){ x.Fe=0.05; x.note='Fe, Mn, NH₄, pH: phòng thí nghiệm (Fe thô 0,05 đã xác nhận; máy cầm tay đọc 1,72); PI: máy cầm tay.'; } });
+  store.set('tx_labs',labs); store.set('tx_mig',117);
+}
 const fv=(x,d=2)=>(x===null||x===undefined||x===''||!isFinite(x))?'–':f(+x,d);
 const XF={d:'xD',t:'xT',t2:'xT2',src:'xSrc',Q:'xQ',PAC:'xPAC',K:'xK',O:'xO',pHm:'xpHm',pH:'xpH',pHo:'xpHo',Tu:'xTu',Tuo:'xTuo',Fe:'xFe',Feo:'xFeo',FeD:'xFeD',Mn:'xMn',Mno:'xMno',MnD:'xMnD',Mns:'xMns',PI:'xPI',PIo:'xPIo',NH:'xNH',NHo:'xNHo',clo:'xClo',col:'xCol',note:'xN'};
 const XTXT=['d','t','t2','src','col','note'];
@@ -1030,7 +1034,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.16';
+const VER='1.17';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
