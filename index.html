@@ -237,7 +237,7 @@ details.sub[open]>summary::before{content:'▾ '}
 
 <header class="bar"><div class="bar-in">
   <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c3.6 4.3 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.4-6.5 6-10.8z"/><path d="M9.2 14.2a3 3 0 0 0 2.8 2.3"/></svg></div>
-  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.15</div></div>
+  <div><h1>Tính liều hóa chất</h1><div class="sub"><span id="plantName"></span>v1.16</div></div>
   <div class="qchip num" id="qbadge"></div>
 </div></header>
 
@@ -887,6 +887,20 @@ if((store.get('tx_mig')||0)<115){ // v1.15: Khang xác nhận nước thô 15h �
   labs.forEach(x=>{ if(x&&/23\/11/.test(x.d||'')&&x.t==='15:00'&&x.PIo==0.7){ x.t2='16:00'; x.note=N15+'Mn đo bằng HI97709 (sai số ±0,2) – chỉ tham khảo.'; } });
   store.set('tx_labs',labs); store.set('tx_mig',115);
 }
+if((store.get('tx_mig')||0)<116){ // v1.16: kết quả PTN 24/11 cho các phiếu 23/11 (Fe, Mn, NH₄, pH); PI vẫn đo hiện trường
+  const LAB={'09:00':{pH:6.52,Fe:1.05,Mn:0.273,NH:3.21,Feo:0.04,Mno:0.116,NHo:2.44},
+             '13:00':{pH:6.44,Mn:0.279,NH:3.37,Feo:0.04,Mno:0.087,NHo:1.29},
+             '15:00':{pH:6.42,Fe:1.18,Mn:0.305,NH:3.43,Feo:0.09,Mno:0.093,NHo:1.99},
+             '16:00':{pH:6.6,Fe:1.67,Mn:0.285,NH:3.34,Feo:0.03,Mno:0.054,NHo:1.96}};
+  labs.forEach(x=>{ const L=x&&/23\/11/.test(x.d||'')&&LAB[x.t]; if(!L) return;
+    Object.assign(x,L); x.src='PTN (PI: hiện trường)';
+    const nn={'09:00':'Fe, Mn, NH₄, pH: phòng thí nghiệm; PI: máy cầm tay. Mn ra mạng vượt chuẩn (không châm KMnO₄).',
+              '13:00':'Fe, Mn, NH₄, pH: phòng thí nghiệm; PI: máy cầm tay. Fe thô PTN báo 0,05 (bất thường, cần xác nhận) – tạm giữ 1,72 đo hiện trường.',
+              '15:00':'BẤT THƯỜNG (PI) – loại khỏi hiệu chỉnh: PI 5,1→0,7 cần ηO ≈ 180% (> 100%). Fe, Mn, NH₄: phòng thí nghiệm; PI: máy cầm tay.',
+              '16:00':'Fe, Mn, NH₄, pH: phòng thí nghiệm; PI: máy cầm tay. PI ra mạng vượt QCĐP.'};
+    x.note=nn[x.t]; });
+  store.set('tx_labs',labs); store.set('tx_mig',116);
+}
 const fv=(x,d=2)=>(x===null||x===undefined||x===''||!isFinite(x))?'–':f(+x,d);
 const XF={d:'xD',t:'xT',t2:'xT2',src:'xSrc',Q:'xQ',PAC:'xPAC',K:'xK',O:'xO',pHm:'xpHm',pH:'xpH',pHo:'xpHo',Tu:'xTu',Tuo:'xTuo',Fe:'xFe',Feo:'xFeo',FeD:'xFeD',Mn:'xMn',Mno:'xMno',MnD:'xMnD',Mns:'xMns',PI:'xPI',PIo:'xPIo',NH:'xNH',NHo:'xNHo',clo:'xClo',col:'xCol',note:'xN'};
 const XTXT=['d','t','t2','src','col','note'];
@@ -1016,7 +1030,7 @@ $('xApply').onclick=()=>{const A=analyze(); let ch=[];
 IN.forEach(id=>$(id).addEventListener('input',renderLabs));
 
 // ===== Báo cáo =====
-const VER='1.15';
+const VER='1.16';
 const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 ['rpUnit','rpBy'].forEach(id=>{const sv=store.get('tx_rp')||{}; if(sv[id]!=null) $(id).value=sv[id];
   $(id).addEventListener('input',()=>{const o=store.get('tx_rp')||{}; o[id]=$(id).value; store.set('tx_rp',o);});});
